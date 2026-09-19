@@ -13,7 +13,8 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -43,7 +44,14 @@ button:active {
     transform: scale(.94);
 }
 
-/* ---------- APP ---------- */
+button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   APP
+   ========================================================= */
 
 #app {
     width: 100%;
@@ -64,7 +72,9 @@ button:active {
     justify-content: center;
 }
 
-/* ---------- SIDE PANELS ---------- */
+/* =========================================================
+   SIDE PANELS
+   ========================================================= */
 
 .side {
     display: flex;
@@ -109,7 +119,9 @@ button:active {
     display: block;
 }
 
-/* ---------- BOARD ---------- */
+/* =========================================================
+   BOARD
+   ========================================================= */
 
 .board-wrap {
     position: relative;
@@ -132,11 +144,15 @@ button:active {
     touch-action: none;
 }
 
+/* =========================================================
+   OVERLAY / MENU
+   ========================================================= */
+
 .overlay {
     position: absolute;
     inset: 2px;
     border-radius: 12px;
-    background: rgba(3,5,9,.82);
+    background: rgba(3,5,9,.86);
     backdrop-filter: blur(8px);
     display: flex;
     flex-direction: column;
@@ -144,6 +160,8 @@ button:active {
     justify-content: center;
     gap: 14px;
     text-align: center;
+    z-index: 10;
+    padding: 20px;
 }
 
 .overlay.hidden {
@@ -157,16 +175,45 @@ button:active {
 
 .overlay p {
     color: #8994a7;
+    min-height: 20px;
+}
+
+.overlay-actions {
+    width: min(230px, 85%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.overlay-btn {
+    width: 100%;
+    min-height: 48px;
+    font-size: 14px;
+    letter-spacing: 1px;
 }
 
 .primary {
-    padding: 14px 32px;
     background: #fff;
     color: #05070b;
-    font-size: 15px;
 }
 
-/* ---------- BOTTOM CONTROLS ---------- */
+.secondary {
+    background: #151a24;
+    border: 1px solid #303a4a;
+}
+
+.danger {
+    background: #35161b;
+    border: 1px solid #7d3039;
+}
+
+.hidden-btn {
+    display: none !important;
+}
+
+/* =========================================================
+   CONTROLS
+   ========================================================= */
 
 .controls {
     display: flex;
@@ -202,7 +249,14 @@ button:active {
     min-height: 44px;
 }
 
-/* ---------- MOBILE ---------- */
+.exit-action {
+    background: #35161b;
+    border: 1px solid #6b2a32;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
 @media (max-width: 800px) {
 
@@ -294,7 +348,9 @@ button:active {
     }
 }
 
-/* Landscape phone */
+/* =========================================================
+   LANDSCAPE PHONE
+   ========================================================= */
 
 @media (max-height: 520px) and (orientation: landscape) {
 
@@ -339,7 +395,10 @@ button:active {
 
     <div class="game-shell">
 
-        <!-- LEFT -->
+        <!-- =================================================
+             LEFT PANEL
+             ================================================= -->
+
         <aside class="side left-panel">
 
             <div class="logo">VOIDBLOCK</div>
@@ -361,20 +420,68 @@ button:active {
 
         </aside>
 
-        <!-- BOARD -->
+
+        <!-- =================================================
+             GAME BOARD
+             ================================================= -->
+
         <main class="board-wrap">
 
             <canvas id="gameCanvas"></canvas>
 
+            <!-- MAIN MENU / PAUSE / GAME OVER -->
+
             <div id="overlay" class="overlay">
-                <h1>VOIDBLOCK</h1>
-                <p id="overlayText">READY?</p>
-                <button class="primary" id="startBtn">PLAY</button>
+
+                <h1 id="overlayTitle">
+                    VOIDBLOCK
+                </h1>
+
+                <p id="overlayText">
+                    READY?
+                </p>
+
+                <div class="overlay-actions">
+
+                    <!-- Main menu -->
+                    <button
+                        class="overlay-btn primary"
+                        id="playBtn">
+                        PLAY
+                    </button>
+
+                    <!-- Pause -->
+                    <button
+                        class="overlay-btn primary hidden-btn"
+                        id="resumeBtn">
+                        RESUME
+                    </button>
+
+                    <!-- Restart -->
+                    <button
+                        class="overlay-btn secondary hidden-btn"
+                        id="restartBtn">
+                        RESTART
+                    </button>
+
+                    <!-- Exit -->
+                    <button
+                        class="overlay-btn danger hidden-btn"
+                        id="exitBtn">
+                        EXIT
+                    </button>
+
+                </div>
+
             </div>
 
         </main>
 
-        <!-- RIGHT -->
+
+        <!-- =================================================
+             RIGHT PANEL
+             ================================================= -->
+
         <aside class="side right-panel">
 
             <div class="panel">
@@ -390,21 +497,50 @@ button:active {
             <div class="controls">
 
                 <div class="control-row">
-                    <button class="control" id="leftBtn">◀</button>
-                    <button class="control rotate" id="rotateBtn">↻</button>
-                    <button class="control" id="rightBtn">▶</button>
+
+                    <button
+                        class="control"
+                        id="leftBtn">
+                        ◀
+                    </button>
+
+                    <button
+                        class="control rotate"
+                        id="rotateBtn">
+                        ↻
+                    </button>
+
+                    <button
+                        class="control"
+                        id="rightBtn">
+                        ▶
+                    </button>
+
                 </div>
 
-                <button class="drop" id="dropBtn">
+                <button
+                    class="drop"
+                    id="dropBtn">
                     HARD DROP
                 </button>
 
-                <button class="action" id="holdBtn">
+                <button
+                    class="action"
+                    id="holdBtn">
                     HOLD
                 </button>
 
-                <button class="action" id="pauseBtn">
+                <button
+                    class="action"
+                    id="pauseBtn">
                     PAUSE
+                </button>
+
+                <!-- DIRECT EXIT BUTTON -->
+                <button
+                    class="action exit-action"
+                    id="gameExitBtn">
+                    EXIT
                 </button>
 
             </div>
@@ -412,7 +548,9 @@ button:active {
         </aside>
 
     </div>
+
 </div>
+
 
 <script>
 "use strict";
@@ -420,49 +558,145 @@ button:active {
 /* =========================================================
    VOIDBLOCK
    Static Tetris-style game
-   No database
-   No localStorage
-   No login
+
+   NO DATABASE
+   NO LOCALSTORAGE
+   NO LOGIN
+   NO BACKEND
+
+   GAME STATES:
+
+   MAIN MENU
+   PLAYING
+   PAUSED
+   GAME OVER
+
+   Buttons:
+
+   PLAY
+   PAUSE
+   RESUME
+   RESTART
+   EXIT
+   ========================================================= */
+
+
+/* =========================================================
+   CONSTANTS
    ========================================================= */
 
 const COLS = 10;
 const ROWS = 20;
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
 
-const nextCanvas = document.getElementById("nextCanvas");
-const nextCtx = nextCanvas.getContext("2d");
+/* =========================================================
+   CANVAS
+   ========================================================= */
 
-const holdCanvas = document.getElementById("holdCanvas");
-const holdCtx = holdCanvas.getContext("2d");
+const canvas =
+    document.getElementById("gameCanvas");
 
-const scoreEl = document.getElementById("score");
-const levelEl = document.getElementById("level");
-const linesEl = document.getElementById("lines");
+const ctx =
+    canvas.getContext("2d");
 
-const overlay = document.getElementById("overlay");
-const overlayText = document.getElementById("overlayText");
-const startBtn = document.getElementById("startBtn");
+const nextCanvas =
+    document.getElementById("nextCanvas");
+
+const nextCtx =
+    nextCanvas.getContext("2d");
+
+const holdCanvas =
+    document.getElementById("holdCanvas");
+
+const holdCtx =
+    holdCanvas.getContext("2d");
+
+
+/* =========================================================
+   UI
+   ========================================================= */
+
+const scoreEl =
+    document.getElementById("score");
+
+const levelEl =
+    document.getElementById("level");
+
+const linesEl =
+    document.getElementById("lines");
+
+
+/* Overlay */
+
+const overlay =
+    document.getElementById("overlay");
+
+const overlayTitle =
+    document.getElementById("overlayTitle");
+
+const overlayText =
+    document.getElementById("overlayText");
+
+const playBtn =
+    document.getElementById("playBtn");
+
+const resumeBtn =
+    document.getElementById("resumeBtn");
+
+const restartBtn =
+    document.getElementById("restartBtn");
+
+const exitBtn =
+    document.getElementById("exitBtn");
+
+
+/* Game controls */
+
+const pauseBtn =
+    document.getElementById("pauseBtn");
+
+const gameExitBtn =
+    document.getElementById("gameExitBtn");
+
+
+/* =========================================================
+   GAME STATE
+   ========================================================= */
 
 let board;
+
 let current;
+
 let nextPiece;
+
 let holdPiece = null;
+
 let canHold = true;
 
 let score = 0;
+
 let level = 1;
+
 let lines = 0;
 
 let running = false;
+
 let paused = false;
 
 let dropTimer = 0;
+
 let lastTime = 0;
+
+let animationFrameId = null;
+
+
+/* =========================================================
+   COLORS
+   ========================================================= */
 
 const COLORS = [
     null,
+
     "#00e5ff", // I
     "#ffe600", // O
     "#b45cff", // T
@@ -472,138 +706,273 @@ const COLORS = [
     "#ff9f43"  // L
 ];
 
+
+/* =========================================================
+   TETROMINOES
+   ========================================================= */
+
 const PIECES = [
+
     [
         [1,1,1,1]
     ],
+
     [
         [2,2],
         [2,2]
     ],
+
     [
         [0,3,0],
         [3,3,3]
     ],
+
     [
         [0,4,4],
         [4,4,0]
     ],
+
     [
         [5,5,0],
         [0,5,5]
     ],
+
     [
         [6,0,0],
         [6,6,6]
     ],
+
     [
         [0,0,7],
         [7,7,7]
     ]
+
 ];
 
+
+/* =========================================================
+   BOARD
+   ========================================================= */
+
 function createBoard() {
+
     return Array.from(
-        {length: ROWS},
+        { length: ROWS },
         () => Array(COLS).fill(0)
     );
 }
 
+
+/* =========================================================
+   MATRIX
+   ========================================================= */
+
 function cloneMatrix(matrix) {
-    return matrix.map(row => [...row]);
+
+    return matrix.map(
+        row => [...row]
+    );
 }
 
+
+/* =========================================================
+   RANDOM PIECE
+   ========================================================= */
+
 function randomPiece() {
+
     const matrix =
         cloneMatrix(
             PIECES[
-                Math.floor(Math.random() * PIECES.length)
+                Math.floor(
+                    Math.random() *
+                    PIECES.length
+                )
             ]
         );
 
     return {
+
         matrix,
-        x: Math.floor((COLS - matrix[0].length) / 2),
+
+        x:
+            Math.floor(
+                (COLS - matrix[0].length) / 2
+            ),
+
         y: 0
+
     };
 }
 
+
+/* =========================================================
+   RESET GAME
+   ========================================================= */
+
 function resetGame() {
-    board = createBoard();
+
+    board =
+        createBoard();
 
     score = 0;
+
     level = 1;
+
     lines = 0;
 
     holdPiece = null;
+
     canHold = true;
 
-    current = randomPiece();
-    nextPiece = randomPiece();
+    current =
+        randomPiece();
+
+    nextPiece =
+        randomPiece();
+
+    dropTimer = 0;
 
     updateUI();
+
     drawSidePieces();
+
+    draw();
 }
 
-function collide(piece, offsetX = 0, offsetY = 0, matrix = piece.matrix) {
 
-    for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
+/* =========================================================
+   COLLISION
+   ========================================================= */
 
-            if (!matrix[y][x]) continue;
+function collide(
+    piece,
+    offsetX = 0,
+    offsetY = 0,
+    matrix = piece.matrix
+) {
 
-            const bx = piece.x + x + offsetX;
-            const by = piece.y + y + offsetY;
+    for (
+        let y = 0;
+        y < matrix.length;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < matrix[y].length;
+            x++
+        ) {
+
+            if (!matrix[y][x])
+                continue;
+
+            const bx =
+                piece.x +
+                x +
+                offsetX;
+
+            const by =
+                piece.y +
+                y +
+                offsetY;
+
 
             if (
                 bx < 0 ||
                 bx >= COLS ||
                 by >= ROWS
             ) {
+
                 return true;
             }
 
-            if (by >= 0 && board[by][bx]) {
+
+            if (
+                by >= 0 &&
+                board[by][bx]
+            ) {
+
                 return true;
             }
+
         }
+
     }
 
     return false;
 }
 
+
+/* =========================================================
+   MERGE
+   ========================================================= */
+
 function merge() {
 
-    for (let y = 0; y < current.matrix.length; y++) {
-        for (let x = 0; x < current.matrix[y].length; x++) {
+    for (
+        let y = 0;
+        y < current.matrix.length;
+        y++
+    ) {
 
-            if (!current.matrix[y][x]) continue;
+        for (
+            let x = 0;
+            x < current.matrix[y].length;
+            x++
+        ) {
 
-            const by = current.y + y;
-            const bx = current.x + x;
+            if (!current.matrix[y][x])
+                continue;
+
+            const by =
+                current.y + y;
+
+            const bx =
+                current.x + x;
 
             if (by >= 0) {
-                board[by][bx] = current.matrix[y][x];
+
+                board[by][bx] =
+                    current.matrix[y][x];
             }
+
         }
+
     }
 }
+
+
+/* =========================================================
+   CLEAR LINES
+   ========================================================= */
 
 function clearLines() {
 
     let cleared = 0;
 
-    for (let y = ROWS - 1; y >= 0; y--) {
+    for (
+        let y = ROWS - 1;
+        y >= 0;
+        y--
+    ) {
 
-        if (board[y].every(Boolean)) {
+        if (
+            board[y].every(Boolean)
+        ) {
 
             board.splice(y, 1);
-            board.unshift(Array(COLS).fill(0));
+
+            board.unshift(
+                Array(COLS).fill(0)
+            );
 
             cleared++;
+
             y++;
         }
     }
+
 
     if (cleared > 0) {
 
@@ -615,7 +984,9 @@ function clearLines() {
             800
         ];
 
-        score += points[cleared] * level;
+        score +=
+            points[cleared] *
+            level;
 
         lines += cleared;
 
@@ -626,38 +997,88 @@ function clearLines() {
     }
 }
 
+
+/* =========================================================
+   SPAWN NEXT
+   ========================================================= */
+
 function spawnNext() {
 
-    current = nextPiece;
+    current =
+        nextPiece;
+
     current.x =
         Math.floor(
-            (COLS - current.matrix[0].length) / 2
+            (COLS -
+                current.matrix[0].length) / 2
         );
+
     current.y = 0;
 
-    nextPiece = randomPiece();
+    nextPiece =
+        randomPiece();
 
     canHold = true;
 
+    drawSidePieces();
+
+
     if (collide(current)) {
+
         gameOver();
     }
 }
 
+
+/* =========================================================
+   MOVE
+   ========================================================= */
+
 function move(dx) {
 
-    if (!running || paused) return;
+    if (
+        !running ||
+        paused
+    ) {
+        return;
+    }
 
-    if (!collide(current, dx, 0)) {
+    if (
+        !collide(
+            current,
+            dx,
+            0
+        )
+    ) {
+
         current.x += dx;
+
+        draw();
     }
 }
 
+
+/* =========================================================
+   SOFT DROP
+   ========================================================= */
+
 function softDrop() {
 
-    if (!running || paused) return;
+    if (
+        !running ||
+        paused
+    ) {
+        return;
+    }
 
-    if (!collide(current, 0, 1)) {
+
+    if (
+        !collide(
+            current,
+            0,
+            1
+        )
+    ) {
 
         current.y++;
 
@@ -669,55 +1090,101 @@ function softDrop() {
     }
 
     updateUI();
+
+    draw();
 }
+
+
+/* =========================================================
+   HARD DROP
+   ========================================================= */
 
 function hardDrop() {
 
-    if (!running || paused) return;
+    if (
+        !running ||
+        paused
+    ) {
+        return;
+    }
 
     let distance = 0;
 
-    while (!collide(current, 0, 1)) {
+
+    while (
+        !collide(
+            current,
+            0,
+            1
+        )
+    ) {
 
         current.y++;
+
         distance++;
     }
 
-    score += distance * 2;
+
+    score +=
+        distance * 2;
 
     lockPiece();
 
     updateUI();
+
+    draw();
 }
+
+
+/* =========================================================
+   LOCK PIECE
+   ========================================================= */
 
 function lockPiece() {
 
     merge();
+
     clearLines();
+
     spawnNext();
 }
 
+
+/* =========================================================
+   ROTATION
+   ========================================================= */
+
 function rotateMatrix(matrix) {
 
-    const result =
-        matrix[0].map(
-            (_, index) =>
-                matrix.map(row => row[index]).reverse()
-        );
-
-    return result;
+    return matrix[0].map(
+        (_, index) =>
+            matrix
+                .map(row => row[index])
+                .reverse()
+    );
 }
+
 
 function rotate() {
 
-    if (!running || paused) return;
+    if (
+        !running ||
+        paused
+    ) {
+        return;
+    }
 
     const rotated =
-        rotateMatrix(current.matrix);
+        rotateMatrix(
+            current.matrix
+        );
 
-    const oldX = current.x;
+    const oldX =
+        current.x;
 
-    current.matrix = rotated;
+    current.matrix =
+        rotated;
+
 
     if (collide(current)) {
 
@@ -725,42 +1192,73 @@ function rotate() {
 
         if (collide(current)) {
 
-            current.x = oldX - 1;
+            current.x =
+                oldX - 1;
 
             if (collide(current)) {
-                current.x = oldX;
+
+                current.x =
+                    oldX;
+
                 current.matrix =
                     rotateMatrix(
                         rotateMatrix(
-                            rotateMatrix(rotated)
+                            rotateMatrix(
+                                rotated
+                            )
                         )
                     );
             }
         }
     }
+
+    draw();
 }
+
+
+/* =========================================================
+   HOLD
+   ========================================================= */
 
 function hold() {
 
-    if (!running || paused || !canHold) return;
+    if (
+        !running ||
+        paused ||
+        !canHold
+    ) {
+        return;
+    }
+
 
     if (!holdPiece) {
 
-        holdPiece = current;
-        current = nextPiece;
-        nextPiece = randomPiece();
+        holdPiece =
+            current;
+
+        current =
+            nextPiece;
+
+        nextPiece =
+            randomPiece();
 
     } else {
 
-        const temp = holdPiece;
+        const temp =
+            holdPiece;
 
-        holdPiece = current;
-        current = temp;
+        holdPiece =
+            current;
+
+        current =
+            temp;
     }
+
 
     current.x =
         Math.floor(
-            (COLS - current.matrix[0].length) / 2
+            (COLS -
+                current.matrix[0].length) / 2
         );
 
     current.y = 0;
@@ -768,7 +1266,14 @@ function hold() {
     canHold = false;
 
     drawSidePieces();
+
+    draw();
 }
+
+
+/* =========================================================
+   GHOST PIECE
+   ========================================================= */
 
 function getGhostY() {
 
@@ -781,11 +1286,17 @@ function getGhostY() {
             distance + 1
         )
     ) {
+
         distance++;
     }
 
     return current.y + distance;
 }
+
+
+/* =========================================================
+   RESIZE
+   ========================================================= */
 
 function resizeCanvas() {
 
@@ -793,10 +1304,16 @@ function resizeCanvas() {
         canvas.getBoundingClientRect();
 
     const dpr =
-        Math.min(window.devicePixelRatio || 1, 2);
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
 
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    canvas.width =
+        rect.width * dpr;
+
+    canvas.height =
+        rect.height * dpr;
 
     ctx.setTransform(
         dpr,
@@ -810,6 +1327,11 @@ function resizeCanvas() {
     draw();
 }
 
+
+/* =========================================================
+   DRAW BLOCK
+   ========================================================= */
+
 function drawBlock(
     context,
     x,
@@ -819,18 +1341,30 @@ function drawBlock(
     alpha = 1
 ) {
 
-    const color = COLORS[value];
+    const color =
+        COLORS[value];
 
     context.save();
-    context.globalAlpha = alpha;
 
-    const px = x + 2;
-    const py = y + 2;
-    const s = size - 4;
+    context.globalAlpha =
+        alpha;
+
+
+    const px =
+        x + 2;
+
+    const py =
+        y + 2;
+
+    const s =
+        size - 4;
+
 
     /* Shadow */
 
-    context.fillStyle = "rgba(0,0,0,.45)";
+    context.fillStyle =
+        "rgba(0,0,0,.45)";
+
     context.fillRect(
         px + 3,
         py + 5,
@@ -838,9 +1372,11 @@ function drawBlock(
         s
     );
 
-    /* Main block */
 
-    context.fillStyle = color;
+    /* Main */
+
+    context.fillStyle =
+        color;
 
     context.fillRect(
         px,
@@ -849,7 +1385,8 @@ function drawBlock(
         s
     );
 
-    /* Top highlight */
+
+    /* Gradient */
 
     const gradient =
         context.createLinearGradient(
@@ -879,7 +1416,9 @@ function drawBlock(
         "rgba(0,0,0,.38)"
     );
 
-    context.fillStyle = gradient;
+
+    context.fillStyle =
+        gradient;
 
     context.fillRect(
         px,
@@ -887,6 +1426,7 @@ function drawBlock(
         s,
         s
     );
+
 
     /* Border */
 
@@ -902,18 +1442,30 @@ function drawBlock(
         s - 1
     );
 
+
     context.restore();
 }
 
+
+/* =========================================================
+   DRAW GAME
+   ========================================================= */
+
 function draw() {
 
-    if (!board) return;
+    if (!board)
+        return;
+
 
     const rect =
         canvas.getBoundingClientRect();
 
-    const width = rect.width;
-    const height = rect.height;
+    const width =
+        rect.width;
+
+    const height =
+        rect.height;
+
 
     ctx.clearRect(
         0,
@@ -922,12 +1474,18 @@ function draw() {
         height
     );
 
-    const cellW = width / COLS;
-    const cellH = height / ROWS;
+
+    const cellW =
+        width / COLS;
+
+    const cellH =
+        height / ROWS;
+
 
     /* Background */
 
-    ctx.fillStyle = "#080b11";
+    ctx.fillStyle =
+        "#080b11";
 
     ctx.fillRect(
         0,
@@ -936,6 +1494,7 @@ function draw() {
         height
     );
 
+
     /* Grid */
 
     ctx.strokeStyle =
@@ -943,26 +1502,64 @@ function draw() {
 
     ctx.lineWidth = 1;
 
-    for (let x = 0; x <= COLS; x++) {
+
+    for (
+        let x = 0;
+        x <= COLS;
+        x++
+    ) {
 
         ctx.beginPath();
-        ctx.moveTo(x * cellW, 0);
-        ctx.lineTo(x * cellW, height);
+
+        ctx.moveTo(
+            x * cellW,
+            0
+        );
+
+        ctx.lineTo(
+            x * cellW,
+            height
+        );
+
         ctx.stroke();
     }
 
-    for (let y = 0; y <= ROWS; y++) {
+
+    for (
+        let y = 0;
+        y <= ROWS;
+        y++
+    ) {
 
         ctx.beginPath();
-        ctx.moveTo(0, y * cellH);
-        ctx.lineTo(width, y * cellH);
+
+        ctx.moveTo(
+            0,
+            y * cellH
+        );
+
+        ctx.lineTo(
+            width,
+            y * cellH
+        );
+
         ctx.stroke();
     }
+
 
     /* Existing blocks */
 
-    for (let y = 0; y < ROWS; y++) {
-        for (let x = 0; x < COLS; x++) {
+    for (
+        let y = 0;
+        y < ROWS;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < COLS;
+            x++
+        ) {
 
             if (board[y][x]) {
 
@@ -970,54 +1567,107 @@ function draw() {
                     ctx,
                     x * cellW,
                     y * cellH,
-                    Math.min(cellW, cellH),
+                    Math.min(
+                        cellW,
+                        cellH
+                    ),
                     board[y][x]
                 );
             }
         }
     }
 
-    if (!current) return;
+
+    if (!current)
+        return;
+
 
     /* Ghost */
 
-    const ghostY = getGhostY();
+    const ghostY =
+        getGhostY();
 
-    for (let y = 0; y < current.matrix.length; y++) {
-        for (let x = 0; x < current.matrix[y].length; x++) {
 
-            if (current.matrix[y][x]) {
+    for (
+        let y = 0;
+        y < current.matrix.length;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < current.matrix[y].length;
+            x++
+        ) {
+
+            if (
+                current.matrix[y][x]
+            ) {
 
                 drawBlock(
                     ctx,
-                    (current.x + x) * cellW,
-                    (ghostY + y) * cellH,
-                    Math.min(cellW, cellH),
+                    (current.x + x) *
+                        cellW,
+
+                    (ghostY + y) *
+                        cellH,
+
+                    Math.min(
+                        cellW,
+                        cellH
+                    ),
+
                     current.matrix[y][x],
+
                     .16
                 );
             }
         }
     }
 
-    /* Current */
 
-    for (let y = 0; y < current.matrix.length; y++) {
-        for (let x = 0; x < current.matrix[y].length; x++) {
+    /* Current piece */
 
-            if (current.matrix[y][x]) {
+    for (
+        let y = 0;
+        y < current.matrix.length;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < current.matrix[y].length;
+            x++
+        ) {
+
+            if (
+                current.matrix[y][x]
+            ) {
 
                 drawBlock(
                     ctx,
-                    (current.x + x) * cellW,
-                    (current.y + y) * cellH,
-                    Math.min(cellW, cellH),
+                    (current.x + x) *
+                        cellW,
+
+                    (current.y + y) *
+                        cellH,
+
+                    Math.min(
+                        cellW,
+                        cellH
+                    ),
+
                     current.matrix[y][x]
                 );
             }
         }
     }
 }
+
+
+/* =========================================================
+   MINI PIECES
+   ========================================================= */
 
 function drawMini(
     context,
@@ -1029,10 +1679,18 @@ function drawMini(
         canvasElement.getBoundingClientRect();
 
     const dpr =
-        Math.min(window.devicePixelRatio || 1, 2);
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
 
-    canvasElement.width = rect.width * dpr;
-    canvasElement.height = rect.height * dpr;
+
+    canvasElement.width =
+        rect.width * dpr;
+
+    canvasElement.height =
+        rect.height * dpr;
+
 
     context.setTransform(
         dpr,
@@ -1043,6 +1701,7 @@ function drawMini(
         0
     );
 
+
     context.clearRect(
         0,
         0,
@@ -1050,9 +1709,14 @@ function drawMini(
         rect.height
     );
 
-    if (!piece) return;
 
-    const matrix = piece.matrix;
+    if (!piece)
+        return;
+
+
+    const matrix =
+        piece.matrix;
+
 
     const size =
         Math.min(
@@ -1060,11 +1724,13 @@ function drawMini(
             rect.height / 4
         );
 
+
     const totalW =
         matrix[0].length * size;
 
     const totalH =
         matrix.length * size;
+
 
     const startX =
         (rect.width - totalW) / 2;
@@ -1072,22 +1738,45 @@ function drawMini(
     const startY =
         (rect.height - totalH) / 2;
 
-    for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
 
-            if (matrix[y][x]) {
+    for (
+        let y = 0;
+        y < matrix.length;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < matrix[y].length;
+            x++
+        ) {
+
+            if (
+                matrix[y][x]
+            ) {
 
                 drawBlock(
                     context,
-                    startX + x * size,
-                    startY + y * size,
+
+                    startX +
+                        x * size,
+
+                    startY +
+                        y * size,
+
                     size,
+
                     matrix[y][x]
                 );
             }
         }
     }
 }
+
+
+/* =========================================================
+   DRAW NEXT + HOLD
+   ========================================================= */
 
 function drawSidePieces() {
 
@@ -1104,6 +1793,11 @@ function drawSidePieces() {
     );
 }
 
+
+/* =========================================================
+   UI
+   ========================================================= */
+
 function updateUI() {
 
     scoreEl.textContent =
@@ -1116,119 +1810,484 @@ function updateUI() {
         lines;
 }
 
+
+/* =========================================================
+   OVERLAY HELPERS
+   ========================================================= */
+
+function hideAllOverlayButtons() {
+
+    playBtn.classList.add(
+        "hidden-btn"
+    );
+
+    resumeBtn.classList.add(
+        "hidden-btn"
+    );
+
+    restartBtn.classList.add(
+        "hidden-btn"
+    );
+
+    exitBtn.classList.add(
+        "hidden-btn"
+    );
+}
+
+
+function showOverlay() {
+
+    overlay.classList.remove(
+        "hidden"
+    );
+}
+
+
+function hideOverlay() {
+
+    overlay.classList.add(
+        "hidden"
+    );
+}
+
+
+/* =========================================================
+   MAIN MENU
+   ========================================================= */
+
+function showMainMenu() {
+
+    running = false;
+
+    paused = false;
+
+    cancelGameLoop();
+
+
+    overlayTitle.textContent =
+        "VOIDBLOCK";
+
+    overlayText.textContent =
+        "READY?";
+
+
+    hideAllOverlayButtons();
+
+
+    playBtn.classList.remove(
+        "hidden-btn"
+    );
+
+
+    showOverlay();
+
+    draw();
+}
+
+
+/* =========================================================
+   PAUSE MENU
+   ========================================================= */
+
+function showPauseMenu() {
+
+    overlayTitle.textContent =
+        "PAUSED";
+
+    overlayText.textContent =
+        "GAME PAUSED";
+
+
+    hideAllOverlayButtons();
+
+
+    resumeBtn.classList.remove(
+        "hidden-btn"
+    );
+
+    restartBtn.classList.remove(
+        "hidden-btn"
+    );
+
+    exitBtn.classList.remove(
+        "hidden-btn"
+    );
+
+
+    showOverlay();
+}
+
+
+/* =========================================================
+   GAME OVER MENU
+   ========================================================= */
+
+function showGameOverMenu() {
+
+    overlayTitle.textContent =
+        "GAME OVER";
+
+    overlayText.textContent =
+        `SCORE ${score.toLocaleString()}`;
+
+
+    hideAllOverlayButtons();
+
+
+    restartBtn.classList.remove(
+        "hidden-btn"
+    );
+
+    exitBtn.classList.remove(
+        "hidden-btn"
+    );
+
+
+    showOverlay();
+}
+
+
+/* =========================================================
+   GAME OVER
+   ========================================================= */
+
 function gameOver() {
 
     running = false;
 
-    overlay.classList.remove("hidden");
+    paused = false;
 
-    overlayText.textContent =
-        `GAME OVER — SCORE ${score}`;
+    cancelGameLoop();
 
-    startBtn.textContent =
-        "PLAY AGAIN";
+    showGameOverMenu();
 }
 
+
+/* =========================================================
+   START GAME
+   ========================================================= */
+
 function startGame() {
+
+    cancelGameLoop();
 
     resetGame();
 
     running = true;
+
     paused = false;
 
-    overlay.classList.add("hidden");
+    hideOverlay();
 
-    lastTime = performance.now();
+    lastTime =
+        performance.now();
 
-    requestAnimationFrame(loop);
+    dropTimer = 0;
+
+    startGameLoop();
 }
+
+
+/* =========================================================
+   RESTART GAME
+   ========================================================= */
+
+function restartGame() {
+
+    cancelGameLoop();
+
+    resetGame();
+
+    running = true;
+
+    paused = false;
+
+    hideOverlay();
+
+    lastTime =
+        performance.now();
+
+    dropTimer = 0;
+
+    startGameLoop();
+}
+
+
+/* =========================================================
+   PAUSE
+   ========================================================= */
+
+function pauseGame() {
+
+    if (
+        !running ||
+        paused
+    ) {
+        return;
+    }
+
+
+    paused = true;
+
+    cancelGameLoop();
+
+    showPauseMenu();
+}
+
+
+/* =========================================================
+   RESUME
+   ========================================================= */
+
+function resumeGame() {
+
+    if (
+        !running ||
+        !paused
+    ) {
+        return;
+    }
+
+
+    paused = false;
+
+    hideOverlay();
+
+    lastTime =
+        performance.now();
+
+    dropTimer = 0;
+
+    startGameLoop();
+}
+
+
+/* =========================================================
+   TOGGLE PAUSE
+   ========================================================= */
 
 function togglePause() {
 
-    if (!running) return;
+    if (!running)
+        return;
 
-    paused = !paused;
 
     if (paused) {
 
-        overlay.classList.remove("hidden");
-
-        overlayText.textContent =
-            "PAUSED";
-
-        startBtn.textContent =
-            "RESUME";
+        resumeGame();
 
     } else {
 
-        overlay.classList.add("hidden");
-
-        lastTime = performance.now();
-
-        requestAnimationFrame(loop);
+        pauseGame();
     }
 }
 
+
+/* =========================================================
+   EXIT GAME
+   ========================================================= */
+
+function exitGame() {
+
+    cancelGameLoop();
+
+    running = false;
+
+    paused = false;
+
+    /*
+       Completely clear the current
+       in-memory game state.
+    */
+
+    board =
+        createBoard();
+
+    current = null;
+
+    nextPiece = null;
+
+    holdPiece = null;
+
+    canHold = true;
+
+    score = 0;
+
+    level = 1;
+
+    lines = 0;
+
+    dropTimer = 0;
+
+    updateUI();
+
+    drawSidePieces();
+
+    showMainMenu();
+
+    draw();
+}
+
+
+/* =========================================================
+   GAME LOOP CONTROL
+   ========================================================= */
+
+function cancelGameLoop() {
+
+    if (
+        animationFrameId !== null
+    ) {
+
+        cancelAnimationFrame(
+            animationFrameId
+        );
+
+        animationFrameId = null;
+    }
+}
+
+
+function startGameLoop() {
+
+    cancelGameLoop();
+
+    animationFrameId =
+        requestAnimationFrame(
+            loop
+        );
+}
+
+
+/* =========================================================
+   GAME LOOP
+   ========================================================= */
+
 function loop(time) {
 
-    if (!running) return;
+    animationFrameId = null;
 
-    if (paused) return;
+
+    if (
+        !running ||
+        paused
+    ) {
+        return;
+    }
+
 
     const delta =
         time - lastTime;
 
-    lastTime = time;
+    lastTime =
+        time;
+
 
     dropTimer += delta;
+
 
     const speed =
         Math.max(
             80,
-            800 - (level - 1) * 65
+            800 -
+            (level - 1) * 65
         );
 
-    if (dropTimer >= speed) {
+
+    if (
+        dropTimer >= speed
+    ) {
 
         dropTimer = 0;
 
-        if (!collide(current, 0, 1)) {
+
+        if (
+            !collide(
+                current,
+                0,
+                1
+            )
+        ) {
+
             current.y++;
+
         } else {
+
             lockPiece();
         }
     }
 
+
     draw();
 
-    requestAnimationFrame(loop);
+
+    if (
+        running &&
+        !paused
+    ) {
+
+        animationFrameId =
+            requestAnimationFrame(
+                loop
+            );
+    }
 }
+
 
 /* =========================================================
    BUTTONS
    ========================================================= */
 
-startBtn.addEventListener(
+
+/* PLAY */
+
+playBtn.addEventListener(
     "click",
-    () => {
-
-        if (paused) {
-
-            togglePause();
-
-        } else {
-
-            startGame();
-        }
-    }
+    startGame
 );
 
-document
-    .getElementById("pauseBtn")
-    .addEventListener(
-        "click",
-        togglePause
-    );
+
+/* RESUME */
+
+resumeBtn.addEventListener(
+    "click",
+    resumeGame
+);
+
+
+/* RESTART */
+
+restartBtn.addEventListener(
+    "click",
+    restartGame
+);
+
+
+/* EXIT FROM OVERLAY */
+
+exitBtn.addEventListener(
+    "click",
+    exitGame
+);
+
+
+/* PAUSE */
+
+pauseBtn.addEventListener(
+    "click",
+    pauseGame
+);
+
+
+/* DIRECT EXIT */
+
+gameExitBtn.addEventListener(
+    "click",
+    exitGame
+);
+
+
+/* MOVE LEFT */
 
 document
     .getElementById("leftBtn")
@@ -1237,12 +2296,18 @@ document
         () => move(-1)
     );
 
+
+/* MOVE RIGHT */
+
 document
     .getElementById("rightBtn")
     .addEventListener(
         "click",
         () => move(1)
     );
+
+
+/* ROTATE */
 
 document
     .getElementById("rotateBtn")
@@ -1251,6 +2316,9 @@ document
         rotate
     );
 
+
+/* HARD DROP */
+
 document
     .getElementById("dropBtn")
     .addEventListener(
@@ -1258,12 +2326,16 @@ document
         hardDrop
     );
 
+
+/* HOLD */
+
 document
     .getElementById("holdBtn")
     .addEventListener(
         "click",
         hold
     );
+
 
 /* =========================================================
    KEYBOARD
@@ -1282,58 +2354,110 @@ document.addEventListener(
                 " "
             ].includes(event.key)
         ) {
+
             event.preventDefault();
         }
+
 
         switch (event.key) {
 
             case "ArrowLeft":
+
                 move(-1);
+
                 break;
+
 
             case "ArrowRight":
+
                 move(1);
+
                 break;
+
 
             case "ArrowDown":
+
                 softDrop();
+
                 break;
+
 
             case "ArrowUp":
+
                 rotate();
+
                 break;
 
+
             case " ":
+
                 hardDrop();
+
                 break;
+
 
             case "c":
             case "C":
+
                 hold();
+
                 break;
+
 
             case "p":
             case "P":
+
                 togglePause();
+
                 break;
+
 
             case "r":
             case "R":
-                if (!running) {
+
+                if (running) {
+
+                    restartGame();
+
+                } else {
+
                     startGame();
                 }
+
+                break;
+
+
+            case "Escape":
+
+                if (running) {
+
+                    if (paused) {
+
+                        exitGame();
+
+                    } else {
+
+                        pauseGame();
+                    }
+                }
+
                 break;
         }
+
     }
 );
+
 
 /* =========================================================
    TOUCH SWIPES
    ========================================================= */
 
 let touchStartX = 0;
+
 let touchStartY = 0;
+
 let touchStartTime = 0;
+
 
 canvas.addEventListener(
     "touchstart",
@@ -1342,15 +2466,25 @@ canvas.addEventListener(
         const touch =
             event.changedTouches[0];
 
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-        touchStartTime = performance.now();
+
+        touchStartX =
+            touch.clientX;
+
+        touchStartY =
+            touch.clientY;
+
+        touchStartTime =
+            performance.now();
+
 
         event.preventDefault();
 
     },
-    {passive: false}
+    {
+        passive: false
+    }
 );
+
 
 canvas.addEventListener(
     "touchend",
@@ -1359,19 +2493,29 @@ canvas.addEventListener(
         const touch =
             event.changedTouches[0];
 
+
         const dx =
-            touch.clientX - touchStartX;
+            touch.clientX -
+            touchStartX;
 
         const dy =
-            touch.clientY - touchStartY;
+            touch.clientY -
+            touchStartY;
+
 
         const duration =
-            performance.now() - touchStartTime;
+            performance.now() -
+            touchStartTime;
+
 
         const distance =
-            Math.sqrt(dx * dx + dy * dy);
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
 
-        /* Tap */
+
+        /* TAP = ROTATE */
 
         if (
             distance < 25 &&
@@ -1385,16 +2529,30 @@ canvas.addEventListener(
             return;
         }
 
-        /* Swipe */
 
-        if (Math.abs(dx) > Math.abs(dy)) {
+        /* HORIZONTAL SWIPE */
 
-            if (Math.abs(dx) > 30) {
+        if (
+            Math.abs(dx) >
+            Math.abs(dy)
+        ) {
 
-                move(dx > 0 ? 1 : -1);
+            if (
+                Math.abs(dx) > 30
+            ) {
+
+                move(
+                    dx > 0
+                        ? 1
+                        : -1
+                );
             }
 
-        } else {
+        }
+
+        /* VERTICAL SWIPE */
+
+        else {
 
             if (dy > 30) {
 
@@ -1406,11 +2564,15 @@ canvas.addEventListener(
             }
         }
 
+
         event.preventDefault();
 
     },
-    {passive: false}
+    {
+        passive: false
+    }
 );
+
 
 /* =========================================================
    RESIZE
@@ -1421,17 +2583,29 @@ window.addEventListener(
     () => {
 
         resizeCanvas();
+
         drawSidePieces();
+
     }
 );
 
+
 /* =========================================================
-   INIT
+   INITIALIZE
    ========================================================= */
 
 resetGame();
+
 resizeCanvas();
+
 draw();
+
+/*
+   Start at MAIN MENU.
+*/
+
+showMainMenu();
+
 </script>
 
 </body>
