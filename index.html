@@ -517,14 +517,21 @@ button:focus-visible {
         margin-bottom: 0;
     }
 
+    /*
+       TOUCH CONTROLS GET THEIR OWN SPACE BELOW THE BOARD.
+       They are NOT positioned over the game canvas, so the
+       falling pieces and playfield remain fully visible.
+    */
     .right-panel .controls {
-        position: absolute;
+        position: static;
         z-index: 6;
-        left: 50%;
-        bottom: max(5px, env(safe-area-inset-bottom));
-        transform: translateX(-50%);
         width: min(96vw, 430px);
+        margin: 6px auto max(4px, env(safe-area-inset-bottom));
         padding: 0;
+        flex: 0 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
     }
 
     .panel {
@@ -549,23 +556,27 @@ button:focus-visible {
         display: none;
     }
 
-    /* The board gets ALL remaining vertical space.
-       Its 10:20 ratio is preserved, so it never stretches. */
+    /*
+       Reserve vertical space for the touch controls.
+       The board is never covered by the buttons.
+       10:20 ratio is preserved at every size.
+    */
     .board-wrap {
-        flex: 1 1 auto;
+        flex: 0 1 auto;
         width: min(
             94vw,
-            calc((100dvh - 148px) / 2),
+            calc((100dvh - 158px) / 2),
             430px
         );
         height: auto;
         max-width: 430px;
-        max-height: calc(100dvh - 148px);
+        max-height: calc(100dvh - 158px);
         aspect-ratio: 10 / 20;
         align-self: center;
         justify-self: center;
         margin: 0 auto;
-        min-height: 240px;
+        min-height: 0;
+        flex-shrink: 1;
     }
 
     #gameCanvas {
@@ -574,29 +585,37 @@ button:focus-visible {
     }
 
     .controls {
-        gap: 7px;
+        gap: 6px;
     }
 
+    /* Flatten the controls into a compact touch pad. */
     .control-row {
-        gap: 7px;
+        display: contents;
+    }
+
+    .control,
+    .drop,
+    .action {
+        min-width: 0;
+        min-height: clamp(42px, 7dvh, 52px);
+        height: clamp(42px, 7dvh, 52px);
+        margin: 0;
     }
 
     .control {
-        min-height: clamp(48px, 8dvh, 58px);
-        font-size: clamp(17px, 5vw, 22px);
+        font-size: clamp(16px, 4.8vw, 21px);
     }
 
     .rotate {
-        font-size: clamp(22px, 6vw, 28px);
-    }
-
-    .drop,
-    .action {
-        min-height: clamp(38px, 6dvh, 48px);
+        font-size: clamp(21px, 5.8vw, 27px);
     }
 
     .drop {
-        font-size: 12px;
+        font-size: clamp(10px, 2.8vw, 12px);
+    }
+
+    .action {
+        font-size: clamp(10px, 2.8vw, 12px);
     }
 
     button {
@@ -611,8 +630,8 @@ button:focus-visible {
             92vw,
             calc((100dvh - 136px) / 2)
         );
-        max-height: calc(100dvh - 136px);
-        min-height: 220px;
+        max-height: calc(100dvh - 150px);
+        min-height: 0;
     }
 
     .left-panel > .panel:nth-child(2),
@@ -630,21 +649,22 @@ button:focus-visible {
         font-size: 12px;
     }
 
-    .controls {
-        gap: 5px;
+    .right-panel .controls {
+        width: min(96vw, 360px);
+        gap: 4px;
+        margin-top: 4px;
     }
 
-    .control-row {
-        gap: 5px;
-    }
-
-    .control {
-        min-height: 45px;
-    }
-
+    .control,
     .drop,
     .action {
-        min-height: 36px;
+        min-height: 40px;
+        height: 40px;
+    }
+
+    .board-wrap {
+        width: min(92vw, calc((100dvh - 150px) / 2));
+        max-height: calc(100dvh - 150px);
     }
 }
 
@@ -762,6 +782,49 @@ button:focus-visible {
 
     .value {
         font-size: 15px;
+    }
+}
+
+/* Short landscape phones: keep controls below the board, never over it. */
+@media (max-width: 800px) and (max-height: 600px) and (orientation: landscape) {
+    .left-panel,
+    .right-panel {
+        display: contents;
+    }
+
+    .left-panel > .panel,
+    .right-panel > .panel {
+        display: none;
+    }
+
+    .game-shell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        overflow: hidden;
+    }
+
+    .board-wrap {
+        width: min(40vh, 230px);
+        height: min(80vh, 460px);
+        max-height: calc(100dvh - 92px);
+        flex: 0 1 auto;
+        margin-top: 4px;
+    }
+
+    .right-panel .controls {
+        width: min(94vw, 430px);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+        margin: 4px auto max(2px, env(safe-area-inset-bottom));
+    }
+
+    .control,
+    .drop,
+    .action {
+        min-height: 36px;
+        height: 36px;
     }
 }
 
