@@ -2015,9 +2015,6 @@ function softDrop() {
 
         current.y++;
 
-        // Soft drop: 1 point per manually dropped cell.
-        score += 1;
-
     } else {
 
         lockPiece();
@@ -2044,9 +2041,6 @@ function hardDrop() {
     }
 
 
-    let distance = 0;
-
-
     while (
         !collide(
             current,
@@ -2055,15 +2049,7 @@ function hardDrop() {
         )
     ) {
 
-        current.y++;
-
-        distance++;
-    }
-
-
-    // Hard drop: 2 points per cell.
-    score +=
-        distance * 2;
+        current.y++;    }
 
 
     lockPiece();
