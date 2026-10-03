@@ -4339,7 +4339,7 @@ showMainMenu();
     }
     const install=document.getElementById("installUpgrade");
     let deferred=null;
-    window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;if(install)install.classList.add("show")});
+    window.addEventListener("beforeinstallprompt",e=>{deferred=e;if(install)install.classList.add("show")});
     if(install)install.addEventListener("click",async()=>{if(!deferred)return;deferred.prompt();try{await deferred.userChoice}catch{}deferred=null;install.classList.remove("show")});
     document.addEventListener("visibilitychange",()=>{if(document.hidden&&typeof pauseGame==="function"&&window.running&&!window.paused)pauseGame()});
     const originalRAF=window.requestAnimationFrame;
