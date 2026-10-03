@@ -360,22 +360,75 @@ button:focus-visible {
     gap: 9px;
 }
 
-#softDropBtn {
-    background: #18202c;
+.control-row-main,
+.control-row-rotate,
+.control-row-actions {
+    width: 100%;
 }
 
 @media (max-width: 800px) {
-    .right-panel .controls {
+    .controls {
+        width: min(96vw, 430px);
+        padding-bottom: max(2px, env(safe-area-inset-bottom));
         touch-action: manipulation;
+        -webkit-user-select: none;
+        user-select: none;
     }
 
-    .right-panel .controls button {
+    .control-row-main,
+    .control-row-rotate,
+    .control-row-actions {
+        display: grid;
+        width: 100%;
+        gap: 6px;
+    }
+
+    .control-row-main {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .control-row-rotate {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .control-row-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .control-row-main .control,
+    .control-row-rotate .control,
+    .control-row-actions .action,
+    .drop {
         min-height: 48px;
+        height: 48px;
     }
 
-    #softDropBtn {
-        font-size: 22px;
+    .control-row-main .control {
+        font-size: 21px;
     }
+
+    .control-row-rotate .control {
+        font-size: 25px;
+    }
+
+    .drop {
+        font-size: 12px;
+        font-weight: 900;
+    }
+}
+
+@media (max-width: 390px) {
+    .control-row-main .control,
+    .control-row-rotate .control,
+    .control-row-actions .action,
+    .drop {
+        min-height: 44px;
+        height: 44px;
+    }
+}
+
+#softDropBtn {
+    background: #18202c;
 }
 
 .control {
@@ -1160,105 +1213,25 @@ body.void-light .upgrade-hud .best{background:#f3f5f8;border-color:#cbd2dc;color
                 <button id="fullscreenBtn" class="quick-btn" type="button" aria-label="Toggle fullscreen">⛶ FULLSCREEN</button>
             </div>
 
-            <div class="controls">
-
-
-                <!-- MOVEMENT + ROTATION -->
-
-                <div class="control-row">
-
-
-                    <button
-                        class="control"
-                        id="leftBtn"
-                        aria-label="Move left">
-
-                        ◀
-
-                    </button>
-
-
-                    <!-- ROTATE COUNTER-CLOCKWISE -->
-
-                    <button
-                        class="control rotate"
-                        id="rotateCCWBtn"
-                        aria-label="Rotate block counter-clockwise"
-                        title="Rotate counter-clockwise">
-
-                        ↺
-
-                    </button>
-
-
-                    <!-- ROTATE CLOCKWISE -->
-
-                    <button
-                        class="control rotate"
-                        id="rotateBtn"
-                        aria-label="Rotate block clockwise"
-                        title="Rotate clockwise">
-
-                        ↻
-
-                    </button>
-
-
-                    <button
-                        class="control"
-                        id="rightBtn"
-                        aria-label="Move right">
-
-                        ▶
-
-                    </button>
-
+            <div class="controls" aria-label="Touch game controls">
+                <div class="control-row control-row-main">
+                    <button class="control" id="leftBtn" type="button" aria-label="Move left">◀</button>
+                    <button class="control" id="softDropBtn" type="button" aria-label="Soft drop">▼</button>
+                    <button class="control" id="rightBtn" type="button" aria-label="Move right">▶</button>
                 </div>
 
+                <div class="control-row control-row-rotate">
+                    <button class="control rotate" id="rotateCCWBtn" type="button" aria-label="Rotate counter-clockwise">↺</button>
+                    <button class="control rotate" id="rotateBtn" type="button" aria-label="Rotate clockwise">↻</button>
+                </div>
 
-                <!-- HARD DROP -->
+                <button class="drop" id="dropBtn" type="button">HARD DROP</button>
 
-                <button
-                    class="drop"
-                    id="dropBtn">
-
-                    HARD DROP
-
-                </button>
-
-
-                <!-- HOLD -->
-
-                <button
-                    class="action"
-                    id="holdBtn">
-
-                    HOLD
-
-                </button>
-
-
-                <!-- PAUSE -->
-
-                <button
-                    class="action"
-                    id="pauseBtn">
-
-                    PAUSE
-
-                </button>
-
-
-                <!-- EXIT -->
-
-                <button
-                    class="action exit-action"
-                    id="gameExitBtn">
-
-                    EXIT
-
-                </button>
-
+                <div class="control-row control-row-actions">
+                    <button class="action" id="holdBtn" type="button">HOLD</button>
+                    <button class="action" id="pauseBtn" type="button">PAUSE</button>
+                    <button class="action exit-action" id="gameExitBtn" type="button">EXIT</button>
+                </div>
             </div>
 
         </aside>
@@ -1299,8 +1272,10 @@ body.void-light .upgrade-hud .best{background:#f3f5f8;border-color:#cbd2dc;color
          window.matchMedia("(any-pointer: coarse)").matches);
 
     const touchAvailable =
-        hasTouchPoints || hasTouchMedia ||
-        ("ontouchstart" in window);
+        hasTouchPoints ||
+        hasTouchMedia ||
+        ("ontouchstart" in window) ||
+        (navigator.platform === "MacIntel" && hasTouchPoints);
 
     document.documentElement.classList.toggle(
         "touch-device",
@@ -3702,26 +3677,44 @@ gameExitBtn.addEventListener(
 );
 
 
-/* LEFT */
+/* TOUCH / MOUSE BUTTONS */
 
-leftBtn.addEventListener(
-    "click",
-    () => {
+function bindRepeatButton(button, action, interval = 75) {
+    if (!button) return;
 
-        move(-1);
-    }
-);
+    let timer = null;
 
+    const stop = () => {
+        if (timer !== null) {
+            clearTimeout(timer);
+            clearInterval(timer);
+            timer = null;
+        }
+    };
 
-/* RIGHT */
+    button.addEventListener("pointerdown", event => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
 
-rightBtn.addEventListener(
-    "click",
-    () => {
+        event.preventDefault();
+        try {
+            button.setPointerCapture(event.pointerId);
+        } catch {}
 
-        move(1);
-    }
-);
+        action();
+
+        timer = setTimeout(() => {
+            timer = setInterval(action, interval);
+        }, 170);
+    }, { passive: false });
+
+    button.addEventListener("pointerup", stop);
+    button.addEventListener("pointercancel", stop);
+    button.addEventListener("lostpointercapture", stop);
+}
+
+bindRepeatButton(leftBtn, () => move(-1));
+bindRepeatButton(rightBtn, () => move(1));
+bindRepeatButton(softDropBtn, softDrop, 55);
 
 
 /* =========================================================
