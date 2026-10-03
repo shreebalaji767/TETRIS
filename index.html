@@ -357,8 +357,25 @@ button:focus-visible {
 
 .control-row {
     display: flex;
-
     gap: 9px;
+}
+
+#softDropBtn {
+    background: #18202c;
+}
+
+@media (max-width: 800px) {
+    .right-panel .controls {
+        touch-action: manipulation;
+    }
+
+    .right-panel .controls button {
+        min-height: 48px;
+    }
+
+    #softDropBtn {
+        font-size: 22px;
+    }
 }
 
 .control {
@@ -1468,6 +1485,11 @@ const rightBtn =
 const dropBtn =
     document.getElementById(
         "dropBtn"
+    );
+
+const softDropBtn =
+    document.getElementById(
+        "softDropBtn"
     );
 
 const holdBtn =
@@ -3730,16 +3752,27 @@ rotateCCWBtn.addEventListener(
 );
 
 
+/* SOFT DROP */
+
+softDropBtn?.addEventListener(
+    "pointerdown",
+    event => {
+        event.preventDefault();
+        softDrop();
+    },
+    { passive: false }
+);
+
+
 /* HARD DROP */
 
 dropBtn.addEventListener(
-    "click",
+    "pointerdown",
     event => {
-
         event.preventDefault();
-
         hardDrop();
-    }
+    },
+    { passive: false }
 );
 
 
