@@ -124,6 +124,13 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 </section>
 </main></div>
 
+<div id="installHelp" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
+<div class="modal-card">
+<div class="modal-head"><h2 id="installHelpTitle">INSTALL VOIDBLOCK</h2><button id="closeInstallHelp" class="close" aria-label="Close install help">×</button></div>
+<div id="installHelpText" style="color:var(--muted);line-height:1.7;font-size:13px"></div>
+<div class="modal-foot"><button id="closeInstallHelp2" class="primary">DONE</button></div>
+</div></div>
+
 <div id="settings" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
 <div class="modal-card">
 <div class="modal-head"><h2 id="settingsTitle">SETTINGS</h2><button id="closeSettings" class="close" aria-label="Close settings">×</button></div>
@@ -144,7 +151,7 @@ const holdCanvas=document.getElementById("hold"),holdCtx=holdCanvas.getContext("
 const nextCanvases=[0,1,2,3,4].map(i=>document.getElementById("next"+i)),nextCtx=nextCanvases.map(c=>c.getContext("2d"));
 const scoreEl=document.getElementById("score"),linesEl=document.getElementById("lines"),levelEl=document.getElementById("level"),bestEl=document.getElementById("best"),bestMobileEl=document.getElementById("bestMobile"),statusEl=document.getElementById("status"),statePill=document.getElementById("statePill");
 const overlay=document.getElementById("overlay"),overlayTitle=document.getElementById("overlayTitle"),overlayText=document.getElementById("overlayText"),primary=document.getElementById("primary"),secondary=document.getElementById("secondary"),restartBtn=document.getElementById("restart"),exitBtn=document.getElementById("exit");
-const settings=document.getElementById("settings"),fullscreenBtn=document.getElementById("fullscreenBtn"),settingsBtn=document.getElementById("settingsBtn"),closeSettings=document.getElementById("closeSettings"),closeSettings2=document.getElementById("closeSettings2"),installBtn=document.getElementById("installBtn");
+const settings=document.getElementById("settings"),fullscreenBtn=document.getElementById("fullscreenBtn"),settingsBtn=document.getElementById("settingsBtn"),closeSettings=document.getElementById("closeSettings"),closeSettings2=document.getElementById("closeSettings2"),installBtn=document.getElementById("installBtn"),installHelp=document.getElementById("installHelp"),installHelpText=document.getElementById("installHelpText"),closeInstallHelp=document.getElementById("closeInstallHelp"),closeInstallHelp2=document.getElementById("closeInstallHelp2");
 const buttons={left:document.getElementById("left"),right:document.getElementById("right"),rotate:document.getElementById("rotate"),rotateCCW:document.getElementById("rotateCCW"),rotate180:document.getElementById("rotate180"),hold:document.getElementById("holdBtn"),softDrop:document.getElementById("softDrop"),pause:document.getElementById("pause"),drop:document.getElementById("drop")};
 let board=[],bag=[],queue=[],current=null,held=null,canHold=true,running=false,paused=false,gameOver=false;
 let score=0,lines=0,level=1,best=loadBest(),raf=0,lastTime=0,fallTimer=0,lockTimer=0,cell=20;
@@ -168,14 +175,14 @@ function restart(){start()}
 function pause(){if(!running)return;paused=true;running=false;setState("PAUSED");cancelAnimationFrame(raf);showPause()}
 function resume(){if(gameOver)return;paused=false;running=true;setState("PLAYING");hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop)}
 function exitGame(){running=false;paused=false;gameOver=false;cancelAnimationFrame(raf);resetState();setState("READY");showMain()}
-function loop(t){if(!running||paused)return;const dt=Math.min(100,t-lastTime);lastTime=t;fallTimer+=dt;const speed=Math.max(70,850-(level-1)*65);if(fallTimer>=speed){fallTimer=0;stepDown(dt)}draw();raf=requestAnimationFrame(loop)}
+function loop(t){if(!running||paused)return;const dt=Math.min(100,t-lastTime);lastTime=t;const speed=Math.max(70,850-(level-1)*65);fallTimer+=dt;if(current&&collides(current,current.x,current.y+1)){lockTimer+=dt;if(lockTimer>=500){lock();fallTimer=0;lockTimer=0}}else{lockTimer=0;if(fallTimer>=speed){fallTimer=0;stepDown(0)}}draw();raf=requestAnimationFrame(loop)}
 function collides(p,x=p.x,y=p.y,m=p.matrix){for(let r=0;r<m.length;r++)for(let c=0;c<m[r].length;c++)if(m[r][c]){const bx=x+c,by=y+r;if(bx<0||bx>=COLS||by>=ROWS+HIDDEN)return true;if(by>=0&&board[by][bx])return true}return false}
 function merge(){for(let r=0;r<current.matrix.length;r++)for(let c=0;c<current.matrix[r].length;c++)if(current.matrix[r][c]){const y=current.y+r,x=current.x+c;if(y>=0)board[y][x]=current.type}}
 function clearLines(){let cleared=0;for(let r=board.length-1;r>=0;r--)if(board[r].every(Boolean)){board.splice(r,1);board.unshift(Array(COLS).fill(null));cleared++;r++}if(cleared){const values=[0,100,300,500,800];score+=values[Math.min(cleared,4)]*level;lines+=cleared;level=Math.floor(lines/10)+1;if(score>best){best=score;saveBest()}statusEl.textContent=cleared===4?"TETRIS!":cleared+" LINE"+(cleared===1?"":"S")+" CLEARED";tone(320+cleared*100,.12,"sine",.035);buzz(cleared===4?30:12);setTimeout(()=>{if(statusEl.textContent)statusEl.textContent=""},900);updateUI()}}
 function lock(){merge();clearLines();spawn();draw()}
 function stepDown(dt=0,manual=false){if(!current||!running||paused)return false;if(!collides(current,current.x,current.y+1)){current.y++;return true}lockTimer+=manual?100:dt;if(manual||lockTimer>=500)lock();return false}
 function move(dx){if(!running||paused||!current)return;if(!collides(current,current.x+dx,current.y)){current.x+=dx;lockTimer=0;tone(110,.025,"square",.012)}draw()}
-function softDrop(){if(!running||paused||!current)return;if(collides(current,current.x,current.y+1))lock();else{current.y++;fallTimer=0;lockTimer=0}draw()}
+function softDrop(){if(!running||paused||!current)return;if(collides(current,current.x,current.y+1)){lockTimer=500;lock()}else{current.y++;fallTimer=0;lockTimer=0}draw()}
 function hardDrop(){if(!running||paused||!current)return;while(!collides(current,current.x,current.y+1))current.y++;tone(75,.045,"square",.018);lock()}
 function rotateMatrix(m,dir){const n=m.length,w=m[0].length,out=Array.from({length:w},()=>Array(n).fill(0));for(let r=0;r<n;r++)for(let c=0;c<w;c++)dir>0?out[c][n-1-r]=m[r][c]:out[w-1-c][r]=m[r][c];return out}
 function tryRotate(next,delta){const kicks=[[0,0],[-1,0],[1,0],[-2,0],[2,0],[0,-1],[0,1]];for(const[kx,ky]of kicks)if(!collides(current,current.x+kx,current.y+ky,next)){current.matrix=next;current.x+=kx;current.y+=ky;current.rotation=(current.rotation+delta+4)%4;lockTimer=0;tone(170,.035,"triangle",.014);buzz(5);draw();return true}return false}
@@ -199,12 +206,15 @@ buttons.rotate.onclick=()=>rotate(1);buttons.rotateCCW.onclick=()=>rotate(-1);bu
 buttons.drop.onclick=hardDrop;buttons.softDrop.onclick=softDrop;
 function repeatButton(btn,fn,delay=75){let timer=0,interval=0;const stop=()=>{clearTimeout(timer);clearInterval(interval);timer=interval=0};btn.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;e.preventDefault();fn();btn.dataset.pressed="1";timer=setTimeout(()=>interval=setInterval(fn,delay),170)});["pointerup","pointercancel","pointerleave"].forEach(x=>btn.addEventListener(x,stop));btn.addEventListener("click",e=>{if(btn.dataset.pressed==="1"){e.preventDefault();e.stopPropagation();btn.dataset.pressed="0"}},{capture:true})}
 repeatButton(buttons.left,()=>move(-1));repeatButton(buttons.right,()=>move(1));repeatButton(buttons.softDrop,softDrop,55);
-document.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","ArrowDown","ArrowUp"," ","c","C","x","X","z","Z","a","A","p","P","r","R"].includes(e.key))e.preventDefault();if(e.key==="ArrowLeft")move(-1);else if(e.key==="ArrowRight")move(1);else if(e.key==="ArrowDown")softDrop();else if(e.key==="ArrowUp"||e.key==="x"||e.key==="X")rotate(1);else if(e.key==="z"||e.key==="Z")rotate(-1);else if(e.key==="a"||e.key==="A")rotate180();else if(e.key===" ")hardDrop();else if(e.key==="c"||e.key==="C")hold();else if(e.key==="p"||e.key==="P")paused?resume():pause();else if(e.key==="r"||e.key==="R")restart()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){settings.classList.add("hidden");installHelp.classList.add("hidden");return}if(!settings.classList.contains("hidden")||!installHelp.classList.contains("hidden"))return;if(["ArrowLeft","ArrowRight","ArrowDown","ArrowUp"," ","c","C","x","X","z","Z","a","A","p","P","r","R"].includes(e.key))e.preventDefault();if(e.key==="ArrowLeft")move(-1);else if(e.key==="ArrowRight")move(1);else if(e.key==="ArrowDown")softDrop();else if(e.key==="ArrowUp"||e.key==="x"||e.key==="X")rotate(1);else if(e.key==="z"||e.key==="Z")rotate(-1);else if(e.key==="a"||e.key==="A")rotate180();else if(e.key===" ")hardDrop();else if(e.key==="c"||e.key==="C")hold();else if(e.key==="p"||e.key==="P")paused?resume():pause();else if(e.key==="r"||e.key==="R")restart()});
 game.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;swipe={x:e.clientX,y:e.clientY,t:performance.now(),active:true};try{game.setPointerCapture(e.pointerId)}catch{}e.preventDefault()},{passive:false});
 game.addEventListener("pointerup",e=>{if(!swipe.active)return;swipe.active=false;const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y,dt=performance.now()-swipe.t,dist=Math.hypot(dx,dy);if(dist<28&&dt<350)rotate(1);else if(Math.abs(dx)>Math.abs(dy)){if(Math.abs(dx)>28)move(dx>0?1:-1)}else if(dy>35)softDrop();else if(dy<-35)hardDrop();e.preventDefault()},{passive:false});
 game.addEventListener("contextmenu",e=>e.preventDefault());
-window.addEventListener("resize",fitCanvas,{passive:true});if(window.visualViewport)visualViewport.addEventListener("resize",fitCanvas,{passive:true});
+window.addEventListener("resize",fitCanvas,{passive:true});
+window.addEventListener("orientationchange",()=>setTimeout(fitCanvas,120),{passive:true});if(window.visualViewport)visualViewport.addEventListener("resize",fitCanvas,{passive:true});
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&running)pause()});
+window.addEventListener("offline",()=>setStatus("OFFLINE • GAME STILL WORKS"));
+window.addEventListener("online",()=>setStatus("ONLINE"));
 function setupToggle(id,key){const b=document.getElementById(id);const render=()=>b.classList.toggle("on",!!prefs[key]);b.onclick=()=>{prefs[key]=!prefs[key];savePrefs();render();draw()};render()}
 setupToggle("soundToggle","sound");setupToggle("vibrationToggle","vibration");setupToggle("ghostToggle","ghost");setupToggle("gridToggle","grid");
 fullscreenBtn.onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{}};
@@ -213,6 +223,8 @@ document.getElementById("resetBest").onclick=()=>{best=0;saveBest();updateUI();s
 function isStandalone(){return window.matchMedia("(display-mode:standalone)").matches||window.navigator.standalone===true}
 function updateInstallButton(){if(isStandalone()){installBtn.classList.remove("show","pulse");installBtn.textContent="✓ INSTALLED";installBtn.disabled=true;return}installBtn.classList.add("show","pulse");installBtn.disabled=false}
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;updateInstallButton()});
+function openInstallHelp(){const ua=navigator.userAgent||"";const ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);const android=/Android/i.test(ua);if(ios){installHelpText.innerHTML="<b>iPhone / iPad</b><br><br>1. Open this page in Safari.<br>2. Tap the <b>Share</b> button.<br>3. Choose <b>Add to Home Screen</b>.<br>4. Tap <b>Add</b>."; }else if(android){installHelpText.innerHTML="<b>Android</b><br><br>Open your browser menu and choose <b>Install app</b> or <b>Add to Home screen</b>."; }else{installHelpText.innerHTML="<b>Desktop</b><br><br>Use the browser's <b>Install</b> icon in the address bar or open the browser menu and choose <b>Install app</b>."; }installHelp.classList.remove("hidden")}
+closeInstallHelp.onclick=closeInstallHelp2.onclick=()=>installHelp.classList.add("hidden");
 installBtn.onclick=async()=>{
   if(isStandalone())return;
   if(deferredInstall){
@@ -222,7 +234,7 @@ installBtn.onclick=async()=>{
     updateInstallButton();
     return;
   }
-  setStatus("USE BROWSER MENU → INSTALL APP");
+  openInstallHelp();
 };
 window.addEventListener("appinstalled",()=>{deferredInstall=null;updateInstallButton();setStatus("APP INSTALLED")});
 updateInstallButton();
