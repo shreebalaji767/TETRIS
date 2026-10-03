@@ -8,7 +8,16 @@
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 >
 
-<title>VOIDBLOCK — Realistic Tetris</title>
+<title>VOIDBLOCK — Tetris</title>
+<meta name="theme-color" content="#05070b">
+<meta name="description" content="VOIDBLOCK — responsive Tetris game.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VOIDBLOCK">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
 
 <style>
 
@@ -878,6 +887,35 @@ button:focus-visible {
 .upgrade-toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#fff;color:#05070b;padding:10px 15px;border-radius:999px;font-weight:800;font-size:12px;z-index:100;transition:.2s}
 .upgrade-toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:800px){.upgrade-hud{display:none}}
+
+/* ===== FINAL DEVICE / BRANDING UPGRADE ===== */
+.logo-wrap{display:flex;justify-content:center}
+.logo{display:flex;align-items:center;justify-content:center;gap:9px;color:#fff;text-decoration:none;letter-spacing:4px}
+.logo-icon{width:34px;height:34px;border-radius:9px;box-shadow:0 0 24px #fff1}
+.pwa-install{display:none;align-items:center;justify-content:center;gap:7px;width:100%;min-height:42px;margin-top:8px;background:#fff;color:#05070b;border:1px solid #fff;border-radius:12px;font-weight:900}
+.pwa-install.show{display:flex}
+.pwa-install svg{width:16px;height:16px}
+@media(max-width:800px){
+ body{min-height:100dvh}
+ #app{min-height:100dvh;padding:max(4px,env(safe-area-inset-top)) max(4px,env(safe-area-inset-right)) max(4px,env(safe-area-inset-bottom)) max(4px,env(safe-area-inset-left))}
+ .game-shell{width:100%;height:100%;min-height:0;display:flex;flex-direction:column;gap:0;justify-content:flex-start;align-items:center}
+ .logo-wrap{position:absolute;top:max(5px,env(safe-area-inset-top));left:0;right:0;z-index:20}
+ .logo{font-size:clamp(14px,4.2vw,21px);letter-spacing:2.5px}
+ .logo-icon{width:clamp(24px,7vw,32px);height:clamp(24px,7vw,32px)}
+ .game-board-wrap,.board-wrap,#game-wrap{width:min(94vw,calc((100dvh - 150px)/2),430px)!important;max-height:calc(100dvh - 150px)!important}
+ .side{display:contents}
+ .panel{max-width:96vw}
+}
+@media(max-width:430px){
+ .game-shell{overflow:hidden}
+}
+@media(orientation:landscape) and (max-height:650px){
+ #app{padding:4px}
+ .game-shell{display:grid;grid-template-columns:120px minmax(190px,44vh) 120px;gap:10px}
+ .logo-wrap{position:static}
+ .logo{font-size:16px}
+ .logo-icon{width:24px;height:24px}
+}
 </style>
 </head>
 
@@ -904,7 +942,9 @@ button:focus-visible {
 
                 <div class="label">
                     HOLD
-                </div>
+                </div><button id="pwaInstall" class="pwa-install" type="button" aria-label="Install VOIDBLOCK">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/></svg> INSTALL APP
+</button>
 
                 <canvas id="holdCanvas"></canvas>
 
@@ -4127,5 +4167,13 @@ showMainMenu();
 
 </script>
 
+
+<script>
+(()=>{let promptEvent=null;const b=document.getElementById('pwaInstall');if(!b)return;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;b.classList.add('show')});
+b.addEventListener('click',async()=>{if(!promptEvent)return;promptEvent.prompt();try{await promptEvent.userChoice}catch{}promptEvent=null;b.classList.remove('show')});
+window.addEventListener('appinstalled',()=>b.classList.remove('show'));
+})();
+</script>
 </body>
 </html>
