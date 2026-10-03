@@ -1485,6 +1485,21 @@ const gameExitBtn =
         "gameExitBtn"
     );
 
+const rotateCCWBtn =
+    document.getElementById(
+        "rotateCCWBtn"
+    );
+
+const pwaInstallBtn =
+    document.getElementById(
+        "pwaInstall"
+    );
+
+const fullscreenBtn =
+    document.getElementById(
+        "fullscreenBtn"
+    );
+
 const musicBtn = document.getElementById("musicBtn");
 const musicFile = document.getElementById("musicFile");
 const musicVolume = document.getElementById("musicVolume");
@@ -1519,6 +1534,8 @@ let score = 0;
 let combo = -1;
 let backToBack = false;
 let lastClearScore = 0;
+let lastActionWasRotation = false;
+let lastClearWasTetris = false;
 
 let level = 1;
 
@@ -1711,6 +1728,8 @@ function resetGame() {
     combo = -1;
     backToBack = false;
     lastClearScore = 0;
+    lastActionWasRotation = false;
+    lastClearWasTetris = false;
 
     level = 1;
 
@@ -1881,30 +1900,39 @@ function clearLines() {
     if (cleared === 0) {
         combo = -1;
         lastClearScore = 0;
+        lastClearWasTetris = false;
+        lastActionWasRotation = false;
         return 0;
     }
 
-    /*
-      VOIDBLOCK SCORING
-      Base clear: 1=100, 2=300, 3=500, 4=800.
-      Values are multiplied by the level at the moment
-      the lines are cleared.
+    const isTSpin = isTSpinMove();
+    const isTetris = cleared === 4;
 
-      Combo: +50 × combo × level.
-      Back-to-back TETRIS: +50% on consecutive 4-line clears.
-    */
-    const base = [0, 100, 300, 500, 800][cleared] || 0;
     combo++;
 
-    let points = base * level;
+    let points;
 
-    if (cleared === 4) {
-        if (backToBack) points = Math.floor(points * 1.5);
-        backToBack = true;
+    if (isTSpin) {
+        const tSpinBase = [400, 800, 1200, 1600];
+        points = (tSpinBase[cleared] || 400) * level;
     } else {
-        backToBack = false;
+        const lineBase = [0, 100, 300, 500, 800];
+        points = (lineBase[cleared] || 0) * level;
     }
 
+    // Back-to-back applies to Tetrises and T-Spins.
+    const difficultClear = isTetris || isTSpin;
+    if (difficultClear && lastClearWasTetris) {
+        points = Math.floor(points * 1.5);
+    }
+
+    if (difficultClear) {
+        lastClearWasTetris = true;
+    } else {
+        lastClearWasTetris = false;
+    }
+
+    // Consecutive line clears build a combo.
     if (combo > 0) {
         points += 50 * combo * level;
     }
@@ -1913,11 +1941,50 @@ function clearLines() {
     lastClearScore = points;
     lines += cleared;
 
-    // Level advances every 10 cleared lines, including 10, 20, 30...
     level = Math.floor(lines / 10) + 1;
+
+    // Perfect clear bonus after the line removal.
+    if (board.every(row => row.every(cell => !cell))) {
+        const perfectClearBonus = 1000 * level;
+        score += perfectClearBonus;
+        lastClearScore += perfectClearBonus;
+    }
+
+    lastActionWasRotation = false;
 
     updateUI();
     return cleared;
+}
+
+function isTSpinMove() {
+    if (!current || !lastActionWasRotation || current.matrix.length !== 3) {
+        return false;
+    }
+
+    // T piece is the only piece with color/index 3.
+    if (!current.matrix.flat().includes(3)) {
+        return false;
+    }
+
+    // Count occupied/out-of-bounds corners around the T pivot.
+    const pivotX = current.x + 1;
+    const pivotY = current.y + 1;
+    const corners = [
+        [pivotX - 1, pivotY - 1],
+        [pivotX + 1, pivotY - 1],
+        [pivotX - 1, pivotY + 1],
+        [pivotX + 1, pivotY + 1]
+    ];
+
+    let occupied = 0;
+
+    for (const [x, y] of corners) {
+        if (x < 0 || x >= COLS || y >= ROWS || (y >= 0 && board[y][x])) {
+            occupied++;
+        }
+    }
+
+    return occupied >= 3;
 }
 
 
@@ -1941,6 +2008,7 @@ function spawnNext() {
 
 
     current.y = 0;
+    lastActionWasRotation = false;
 
 
     nextPiece =
@@ -1985,6 +2053,7 @@ function move(dx) {
     ) {
 
         current.x += dx;
+        lastActionWasRotation = false;
 
         draw();
     }
@@ -2014,6 +2083,7 @@ function softDrop() {
     ) {
 
         current.y++;
+        lastActionWasRotation = false;
 
     } else {
 
@@ -2131,6 +2201,7 @@ function rotate() {
         !collide(current)
     ) {
 
+        lastActionWasRotation = true;
         draw();
 
         return;
@@ -2149,6 +2220,7 @@ function rotate() {
         !collide(current)
     ) {
 
+        lastActionWasRotation = true;
         draw();
 
         return;
@@ -2167,6 +2239,7 @@ function rotate() {
         !collide(current)
     ) {
 
+        lastActionWasRotation = true;
         draw();
 
         return;
@@ -2185,6 +2258,7 @@ function rotate() {
         !collide(current)
     ) {
 
+        lastActionWasRotation = true;
         draw();
 
         return;
@@ -2267,6 +2341,7 @@ function rotateCounterClockwise() {
         !collide(current)
     ) {
 
+        lastActionWasRotation = true;
         draw();
 
         return;
@@ -2285,6 +2360,7 @@ function rotateCounterClockwise() {
         !collide(current)
     ) {
 
+        lastActionWasRotation = true;
         draw();
 
         return;
@@ -2303,6 +2379,7 @@ function rotateCounterClockwise() {
         !collide(current)
     ) {
 
+        lastActionWasRotation = true;
         draw();
 
         return;
@@ -2401,6 +2478,7 @@ function hold() {
 
 
     canHold = false;
+    lastActionWasRotation = false;
 
 
     drawSidePieces();
@@ -3542,6 +3620,36 @@ function loop(time) {
 
 
 /* =========================================================
+   FULLSCREEN
+   ========================================================= */
+
+async function toggleFullscreen() {
+    try {
+        if (document.fullscreenElement) {
+            await document.exitFullscreen();
+            return;
+        }
+
+        const target = document.documentElement;
+        if (target.requestFullscreen) {
+            await target.requestFullscreen({ navigationUI: "hide" });
+        }
+    } catch {
+        // Fullscreen can be denied by browser/device policy.
+    }
+}
+
+fullscreenBtn?.addEventListener("click", toggleFullscreen);
+
+document.addEventListener("fullscreenchange", () => {
+    if (fullscreenBtn) {
+        fullscreenBtn.textContent =
+            document.fullscreenElement ? "⛶ EXIT FULLSCREEN" : "⛶ FULLSCREEN";
+    }
+});
+
+
+/* =========================================================
    MUSIC
    ========================================================= */
 
@@ -3732,7 +3840,7 @@ holdBtn.addEventListener(
 
    IMPORTANT:
 
-   ARROW UP DOES NOT ROTATE.
+   ARROW UP = ROTATE CLOCKWISE.
 
    ROTATION:
 
@@ -4286,34 +4394,104 @@ showMainMenu();
    ========================================================= */
 (function upgradePack(){
     const KEY="voidblock-best-score";
+    const THEME_KEY="voidblock-theme";
     let best=0;
-    try { best=Number(localStorage.getItem(KEY)||0); } catch {}
-        function getScore(){
+    let deferred=null;
+
+    try {
+        best = Number(localStorage.getItem(KEY) || 0);
+    } catch {}
+
+    function getScore(){
         const el=document.getElementById("score");
-        return el?Number(String(el.textContent).replace(/[^0-9]/g,""))||0:0;
+        return el ? Number(String(el.textContent).replace(/[^0-9]/g,"")) || 0 : 0;
     }
+
     function toast(message){
         let t=document.querySelector(".upgrade-toast");
-        if(!t){t=document.createElement("div");t.className="upgrade-toast";document.body.appendChild(t)}
-        t.textContent=message;t.classList.add("show");clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove("show"),1400);
+        if(!t){
+            t=document.createElement("div");
+            t.className="upgrade-toast";
+            document.body.appendChild(t);
+        }
+        t.textContent=message;
+        t.classList.add("show");
+        clearTimeout(t._timer);
+        t._timer=setTimeout(()=>t.classList.remove("show"),1400);
     }
-    function saveBest(){const s=getScore();if(s>best){best=s;try{localStorage.setItem(KEY,String(best))}catch{}}const el=document.getElementById("upgradeBestValue");if(el)el.textContent=best.toLocaleString()}
+
+    function saveBest(){
+        const s=getScore();
+        if(s>best){
+            best=s;
+            try { localStorage.setItem(KEY,String(best)); } catch {}
+        }
+        const el=document.getElementById("upgradeBestValue");
+        if(el) el.textContent=best.toLocaleString();
+    }
+
     const side=document.querySelector(".right-panel")||document.querySelector(".right");
     if(side){
-        const panel=document.createElement("div");panel.className="panel upgrade-hud";panel.innerHTML='<div class="best">PERSONAL BEST <strong id="upgradeBestValue">0</strong></div><button id="themeUpgrade">THEME</button><button id="installUpgrade" class="install-upgrade">INSTALL</button>';
+        const panel=document.createElement("div");
+        panel.className="panel upgrade-hud";
+        panel.innerHTML='<div class="best">PERSONAL BEST <strong id="upgradeBestValue">0</strong></div><button id="themeUpgrade" type="button">THEME</button>';
         side.appendChild(panel);
-        const bestEl=document.getElementById("upgradeBestValue");if(bestEl)bestEl.textContent=best.toLocaleString();
-        const theme=document.getElementById("themeUpgrade");if(theme)theme.addEventListener("click",()=>{document.body.classList.toggle("void-light");toast("Theme toggled")});
+
+        const bestEl=document.getElementById("upgradeBestValue");
+        if(bestEl) bestEl.textContent=best.toLocaleString();
+
+        const theme=document.getElementById("themeUpgrade");
+        if(theme){
+            try {
+                if(localStorage.getItem(THEME_KEY)==="light"){
+                    document.body.classList.add("void-light");
+                }
+            } catch {}
+
+            theme.addEventListener("click",()=>{
+                const light=document.body.classList.toggle("void-light");
+                try { localStorage.setItem(THEME_KEY,light?"light":"dark"); } catch {}
+                toast(light ? "LIGHT THEME" : "VOID THEME");
+            });
+        }
     }
-    const install=document.getElementById("installUpgrade");
-    let deferred=null;
-    window.addEventListener("beforeinstallprompt",e=>{deferred=e;if(install)install.classList.add("show")});
-    window.addEventListener("appinstalled",()=>{deferred=null;if(install)install.classList.remove("show");toast("VOIDBLOCK INSTALLED")});
-    if(install)install.addEventListener("click",async()=>{if(!deferred)return;try{await deferred.prompt();await deferred.userChoice}catch{}deferred=null;install.classList.remove("show")});
-    document.addEventListener("visibilitychange",()=>{if(document.hidden&&typeof pauseGame==="function"&&running&&!paused)pauseGame();});
-        setInterval(saveBest,500);
+
+    const installButtons=[pwaInstallBtn,document.getElementById("installUpgrade")].filter(Boolean);
+
+    window.addEventListener("beforeinstallprompt",event=>{
+        event.preventDefault();
+        deferred=event;
+        installButtons.forEach(button=>button.classList.add("show"));
+    });
+
+    window.addEventListener("appinstalled",()=>{
+        deferred=null;
+        installButtons.forEach(button=>button.classList.remove("show"));
+        toast("VOIDBLOCK INSTALLED");
+    });
+
+    installButtons.forEach(button=>{
+        button.addEventListener("click",async()=>{
+            if(!deferred) return;
+            try {
+                await deferred.prompt();
+                await deferred.userChoice;
+            } catch {}
+            deferred=null;
+            installButtons.forEach(item=>item.classList.remove("show"));
+        });
+    });
+
+    document.addEventListener("visibilitychange",()=>{
+        if(document.hidden && running && !paused) pauseGame();
+    });
+
+    setInterval(saveBest,1000);
     saveBest();
-    if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+
+    if("serviceWorker" in navigator){
+        navigator.serviceWorker.register("./sw.js").catch(()=>{});
+    }
 })();
 
 </script>
