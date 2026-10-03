@@ -868,6 +868,16 @@ button:focus-visible {
         touch-action: none;
     }
 }
+
+/* ===== VOIDBLOCK UPGRADE PACK ===== */
+.upgrade-hud{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.upgrade-hud button{min-height:40px;border:1px solid #293342;background:#111722;color:#fff;border-radius:10px;font-weight:800}
+.upgrade-hud .best{grid-column:1/-1;padding:8px 10px;border:1px solid #252d3a;border-radius:10px;background:#090c12;color:#8d99ad;font-size:10px;letter-spacing:1px}
+.upgrade-hud strong{color:#fff;font-size:15px}
+.install-upgrade{display:none}.install-upgrade.show{display:block}
+.upgrade-toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#fff;color:#05070b;padding:10px 15px;border-radius:999px;font-weight:800;font-size:12px;z-index:100;transition:.2s}
+.upgrade-toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){.upgrade-hud{display:none}}
 </style>
 </head>
 
@@ -4076,6 +4086,44 @@ draw();
 */
 
 showMainMenu();
+
+
+
+/* =========================================================
+   VOIDBLOCK UPGRADE PACK
+   Persistent best score + accessibility helpers + install/PWA
+   ========================================================= */
+(function upgradePack(){
+    const KEY="voidblock-best-score";
+    let best=Number(localStorage.getItem(KEY)||0);
+    const originalUpdateUI=window.updateUI;
+    function getScore(){
+        const el=document.getElementById("score");
+        return el?Number(String(el.textContent).replace(/[^0-9]/g,""))||0:0;
+    }
+    function toast(message){
+        let t=document.querySelector(".upgrade-toast");
+        if(!t){t=document.createElement("div");t.className="upgrade-toast";document.body.appendChild(t)}
+        t.textContent=message;t.classList.add("show");clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove("show"),1400);
+    }
+    function saveBest(){const s=getScore();if(s>best){best=s;localStorage.setItem(KEY,String(best))}const el=document.getElementById("upgradeBestValue");if(el)el.textContent=best.toLocaleString()}
+    const side=document.querySelector(".right-panel")||document.querySelector(".right");
+    if(side){
+        const panel=document.createElement("div");panel.className="panel upgrade-hud";panel.innerHTML='<div class="best">PERSONAL BEST <strong id="upgradeBestValue">0</strong></div><button id="themeUpgrade">THEME</button><button id="installUpgrade" class="install-upgrade">INSTALL</button>';
+        side.appendChild(panel);
+        document.getElementById("upgradeBestValue").textContent=best.toLocaleString();
+        document.getElementById("themeUpgrade").addEventListener("click",()=>{document.body.classList.toggle("void-light");toast("Theme toggled")});
+    }
+    const install=document.getElementById("installUpgrade");
+    let deferred=null;
+    window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;if(install)install.classList.add("show")});
+    if(install)install.addEventListener("click",async()=>{if(!deferred)return;deferred.prompt();try{await deferred.userChoice}catch{}deferred=null;install.classList.remove("show")});
+    document.addEventListener("visibilitychange",()=>{if(document.hidden&&typeof pauseGame==="function"&&window.running&&!window.paused)pauseGame()});
+    const originalRAF=window.requestAnimationFrame;
+    setInterval(saveBest,500);
+    saveBest();
+    if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
 
 </script>
 
