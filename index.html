@@ -1886,6 +1886,9 @@ function merge() {
    ========================================================= */
 
 function clearLines() {
+    // Detect a T-Spin while the locked piece is still in its
+    // original position. Line removal can change the corners.
+    const isTSpin = isTSpinMove();
     let cleared = 0;
 
     for (let y = ROWS - 1; y >= 0; y--) {
@@ -1905,7 +1908,6 @@ function clearLines() {
         return 0;
     }
 
-    const isTSpin = isTSpinMove();
     const isTetris = cleared === 4;
 
     combo++;
