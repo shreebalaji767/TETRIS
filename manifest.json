@@ -4,9 +4,10 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#05070b",
-  "theme_color": "#070a10",
-  "description": "A responsive Tetris game.",
+  "orientation": "any",
+  "background_color": "#050810",
+  "theme_color": "#070b12",
+  "description": "A fast, responsive, offline-ready Tetris game with touch controls.",
   "icons": [
     {
       "src": "icon.svg",
@@ -16,7 +17,7 @@
     },
     {
       "src": "favicon.svg",
-      "sizes": "64x64",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
