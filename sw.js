@@ -1,17 +1,10 @@
-const CACHE = "voidblock-v6";
-
-const ASSETS = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./icon.svg",
-  "./favicon.svg"
-];
+const CACHE_NAME = "voidblock-v8";
+const CORE = ["./","./index.html","./manifest.json","./favicon.svg","./icon.svg"];
 
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE)
-      .then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(CORE))
       .then(() => self.skipWaiting())
   );
 });
@@ -19,46 +12,31 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
-      .then(keys =>
-        Promise.all(
-          keys
-            .filter(key => key !== CACHE)
-            .map(key => caches.delete(key))
-        )
-      )
+      .then(keys => Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      ))
       .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  const request = event.request;
+  const url = new URL(request.url);
 
-  const url = new URL(event.request.url);
-
-  if (url.pathname.endsWith("/favicon.ico")) {
-    event.respondWith(
-      fetch(new URL("./favicon.svg", self.registration.scope))
-        .catch(() => caches.match("./favicon.svg"))
-    );
-    return;
-  }
+  if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
+    caches.match(request).then(cached => {
+      const network = fetch(request).then(response => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy)).catch(() => {});
+        }
+        return response;
+      }).catch(() => cached || caches.match("./index.html"));
 
-      return fetch(event.request)
-        .then(response => {
-          if (response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE)
-              .then(cache => cache.put(event.request, copy))
-              .catch(() => {});
-          }
-
-          return response;
-        })
-        .catch(() => caches.match("./"));
+      return cached || network;
     })
   );
 });
