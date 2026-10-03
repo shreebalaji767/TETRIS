@@ -4461,7 +4461,6 @@ showMainMenu();
     const installButtons=[pwaInstallBtn,document.getElementById("installUpgrade")].filter(Boolean);
 
     window.addEventListener("beforeinstallprompt",event=>{
-        event.preventDefault();
         deferred=event;
         installButtons.forEach(button=>button.classList.add("show"));
     });
