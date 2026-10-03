@@ -47,7 +47,15 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 .actions{width:min(250px,90%);display:grid;gap:8px}.actions button{min-height:48px}.primary{background:linear-gradient(145deg,#fff,#dce7f2);color:#06101a;border-color:#fff}.danger{background:#32131c;border-color:#703342;color:#fecdd3}
 .controls{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:10px}
 .controls button{min-height:55px;font-size:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-.controls .move{grid-column:span 1}.controls .utility{grid-column:span 1}.controls .rotate{background:linear-gradient(145deg,#1b2e46,#111c2b);border-color:#486481}.control-label{font-size:7px;color:#93a5bb;letter-spacing:1px}.controls .wide{grid-column:span 2}.controls .drop{grid-column:span 3;background:linear-gradient(145deg,#f8fafc,#dbe5ee);color:#06101a;border-color:#fff;font-size:11px;letter-spacing:1px}
+.controls .move{grid-column:span 2;min-height:62px;background:linear-gradient(145deg,#20344c,#101b29);border-color:#587795;font-size:27px}
+.controls .move:first-child{border-radius:16px 11px 11px 16px}
+.controls .move:nth-child(4){border-radius:11px 16px 16px 11px}
+.controls .utility{grid-column:span 1}
+.controls .rotate{background:linear-gradient(145deg,#1b2e46,#111c2b);border-color:#486481}
+.controls .rotate:active{background:linear-gradient(145deg,#294766,#172a3f);border-color:#67e8f9}
+.control-label{font-size:7px;color:#93a5bb;letter-spacing:1px}
+.controls .wide{grid-column:span 2}
+.controls .drop{grid-column:span 3;background:linear-gradient(145deg,#f8fafc,#dbe5ee);color:#06101a;border-color:#fff;font-size:11px;letter-spacing:1px}
 .hint{text-align:center;color:#718197;font-size:9px;margin-top:6px;line-height:1.4}.status{text-align:center;color:#aebdce;font-size:10px;min-height:18px;margin-top:4px}
 .key-help{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:7px}
 .key-help span{padding:3px 6px;border:1px solid #233248;border-radius:6px;color:#718197;background:#0a1018;font-size:8px;letter-spacing:.3px}
@@ -68,14 +76,15 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
  .board-wrap{width:min(92vw,calc((100dvh - 178px)/2),430px);max-height:calc(100dvh - 178px);margin-top:30px}
  .topbar{position:absolute;top:28px;right:5px;z-index:6;margin:0}.topbar button{min-height:31px;padding:0 8px;font-size:9px}
  .controls{width:min(96vw,430px);margin:6px auto 0;gap:5px;grid-template-columns:repeat(4,1fr)}
- .controls button{min-height:clamp(40px,6.5dvh,54px);font-size:clamp(15px,5vw,21px);border-radius:12px}
- .controls .wide{grid-column:span 2}.controls .drop{grid-column:span 2;min-height:43px}
+ .controls button{min-height:clamp(42px,6.5dvh,54px);font-size:clamp(15px,5vw,21px);border-radius:12px}
+ .controls .move{grid-column:span 1;min-height:clamp(48px,7.5dvh,62px);font-size:clamp(22px,7vw,29px)}
+ .controls .wide{grid-column:span 2}.controls .drop{grid-column:span 2;min-height:45px}
  .status{font-size:9px}
 }
 @media(max-width:390px){.left .panel:nth-child(5),.left .panel:nth-child(6),.right .panel:nth-child(2),.right .panel:nth-child(3){display:none}.board-wrap{width:min(91vw,calc((100dvh - 184px)/2));max-height:calc(100dvh - 184px)}.controls{gap:4px}.controls button{min-height:39px}.topbar button{min-height:29px;padding:0 6px;font-size:8px}}
 @media(max-height:600px) and (orientation:landscape){
  #app{padding:3px}.shell{display:grid;grid-template-columns:120px minmax(180px,38vh) 160px;gap:8px}.brand{position:static;transform:none;font-size:15px}.board-wrap{grid-column:2;width:min(38vh,300px);max-height:calc(100dvh - 8px)}
- .topbar{position:absolute;left:5px;top:5px;z-index:8}.controls{position:absolute;right:4px;bottom:4px;width:160px;grid-template-columns:repeat(2,1fr);margin:0;gap:5px}.controls .drop{grid-column:span 2}.controls button{min-height:36px;font-size:14px}.hint{display:none}
+ .topbar{position:absolute;left:5px;top:5px;z-index:8}.controls{position:absolute;right:4px;bottom:4px;width:180px;grid-template-columns:repeat(2,1fr);margin:0;gap:5px}.controls .drop{grid-column:span 2}.controls button{min-height:38px;font-size:14px}.controls .move{min-height:44px;font-size:19px}.hint{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -103,10 +112,10 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 <div class="actions"><button id="primary" class="primary">PLAY</button><button id="secondary" class="hidden">RESUME</button><button id="restart" class="hidden">RESTART</button><button id="exit" class="danger hidden">EXIT</button></div>
 </div></div>
 <div class="controls" aria-label="Touch controls">
-<button id="left" aria-label="Move left">◀<span class="control-label">LEFT</span></button>
-<button id="rotateCCW" class="rotate" aria-label="Rotate left">↺<span class="control-label">ROTATE</span></button>
-<button id="rotate" class="rotate" aria-label="Rotate right">↻<span class="control-label">ROTATE</span></button>
-<button id="right" aria-label="Move right">▶<span class="control-label">RIGHT</span></button>
+<button id="left" class="move side-move" aria-label="Move left">◀<span class="control-label">LEFT</span></button>
+<button id="rotateCCW" class="rotate" aria-label="Rotate counter-clockwise">↺<span class="control-label">CCW</span></button>
+<button id="rotate" class="rotate" aria-label="Rotate clockwise">↻<span class="control-label">CW</span></button>
+<button id="right" class="move side-move" aria-label="Move right">▶<span class="control-label">RIGHT</span></button>
 <button id="rotate180" class="wide rotate" aria-label="Rotate 180 degrees">⟳ <span class="control-label">180°</span></button>
 <button id="holdBtn" class="wide" aria-label="Hold piece">HOLD</button>
 <button id="softDrop" class="utility" aria-label="Soft drop">▼<span class="control-label">SOFT</span></button>
