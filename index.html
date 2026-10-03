@@ -53,7 +53,7 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 .key-help span{padding:3px 6px;border:1px solid #233248;border-radius:6px;color:#718197;background:#0a1018;font-size:8px;letter-spacing:.3px}
 .board-frame{position:relative;padding:6px;border:1px solid #203047;border-radius:21px;background:linear-gradient(145deg,#101b29,#060b12);box-shadow:0 22px 65px #000b,inset 0 1px #ffffff08}
 .modal{position:fixed;inset:0;background:#02050abf;backdrop-filter:blur(14px);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}.modal-card{width:min(430px,94vw);max-height:min(90dvh,700px);overflow:auto;background:linear-gradient(145deg,#142033,#09111c);border:1px solid var(--line2);border-radius:20px;padding:18px;box-shadow:0 25px 80px #000b}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.modal-head h2{font-size:20px}.close{width:38px;height:38px}.setting{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #ffffff0b}.setting span{font-size:13px}.setting small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.toggle{width:54px;height:30px;border-radius:20px;padding:3px;background:#172131}.toggle i{display:block;width:22px;height:22px;border-radius:50%;background:#7b8797;transition:.2s}.toggle.on{background:#164556;border-color:#3c91aa}.toggle.on i{transform:translateX(23px);background:var(--cyan)}.modal-foot{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.modal-foot button{min-height:44px}
-.install{display:none}.install.show{display:block}
+.install{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(145deg,#67e8f9,#bff8ff);color:#041018;border-color:#9ff3ff;box-shadow:0 0 24px #67e8f930,0 7px 18px #0007}.install.show{display:inline-flex}.install.pulse{animation:installPulse 1.8s ease-in-out infinite}@keyframes installPulse{50%{box-shadow:0 0 34px #67e8f960,0 7px 18px #0007}}
 @media(max-width:800px){
  .center{width:100%}
  .key-help{display:none}
@@ -94,7 +94,7 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 <div class="kicker"><span class="status-pill" id="statePill">READY</span></div>
 <div class="topbar">
 <button id="fullscreenBtn" aria-label="Toggle fullscreen">⛶ FULL</button><button id="settingsBtn" aria-label="Open settings">⚙ SETTINGS</button>
-<button id="installBtn" class="install" aria-label="Install game">＋ INSTALL</button>
+<button id="installBtn" class="install show pulse" aria-label="Install VOIDBLOCK">＋ INSTALL APP</button>
 </div>
 <div class="board-frame"><div class="board-wrap">
 <canvas id="game" aria-label="Tetris game board"></canvas>
@@ -210,9 +210,22 @@ setupToggle("soundToggle","sound");setupToggle("vibrationToggle","vibration");se
 fullscreenBtn.onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{}};
 settingsBtn.onclick=()=>{settings.classList.remove("hidden");if(running)pause()};closeSettings.onclick=closeSettings2.onclick=()=>settings.classList.add("hidden");
 document.getElementById("resetBest").onclick=()=>{best=0;saveBest();updateUI();setStatus("BEST SCORE RESET")};
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;installBtn.classList.add("show")});
-installBtn.onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;installBtn.classList.remove("show")};
-window.addEventListener("appinstalled",()=>installBtn.classList.remove("show"));
+function isStandalone(){return window.matchMedia("(display-mode:standalone)").matches||window.navigator.standalone===true}
+function updateInstallButton(){if(isStandalone()){installBtn.classList.remove("show","pulse");installBtn.textContent="✓ INSTALLED";installBtn.disabled=true;return}installBtn.classList.add("show","pulse");installBtn.disabled=false}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;updateInstallButton()});
+installBtn.onclick=async()=>{
+  if(isStandalone())return;
+  if(deferredInstall){
+    deferredInstall.prompt();
+    try{await deferredInstall.userChoice}catch{}
+    deferredInstall=null;
+    updateInstallButton();
+    return;
+  }
+  setStatus("USE BROWSER MENU → INSTALL APP");
+};
+window.addEventListener("appinstalled",()=>{deferredInstall=null;updateInstallButton();setStatus("APP INSTALLED")});
+updateInstallButton();
 resetState();fitCanvas();showMain();updateUI();setState("READY");
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
