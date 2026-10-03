@@ -4319,8 +4319,7 @@ showMainMenu();
 (function upgradePack(){
     const KEY="voidblock-best-score";
     let best=Number(localStorage.getItem(KEY)||0);
-    const originalUpdateUI=window.updateUI;
-    function getScore(){
+        function getScore(){
         const el=document.getElementById("score");
         return el?Number(String(el.textContent).replace(/[^0-9]/g,""))||0:0;
     }
@@ -4341,9 +4340,8 @@ showMainMenu();
     let deferred=null;
     window.addEventListener("beforeinstallprompt",e=>{deferred=e;if(install)install.classList.add("show")});
     if(install)install.addEventListener("click",async()=>{if(!deferred)return;deferred.prompt();try{await deferred.userChoice}catch{}deferred=null;install.classList.remove("show")});
-    document.addEventListener("visibilitychange",()=>{if(document.hidden&&typeof pauseGame==="function"&&window.running&&!window.paused)pauseGame()});
-    const originalRAF=window.requestAnimationFrame;
-    setInterval(saveBest,500);
+    document.addEventListener("visibilitychange",()=>{if(document.hidden&&typeof pauseGame==="function"&&running&&!paused)pauseGame();});
+        setInterval(saveBest,500);
     saveBest();
     if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 })();
