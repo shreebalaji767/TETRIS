@@ -1891,11 +1891,17 @@ function clearLines() {
         return 0;
     }
 
-    // Score ONLY for completed lines disappearing.
-    // Nothing else gives score: no drops, combos, T-Spins,
-    // perfect clears, holds, rotations, or movement bonuses.
+    // Score is based only on lines that disappear.
     const pointsPerLine = 100;
     score += cleared * pointsPerLine;
+
+    // Perfect clear bonus: only when the board is completely empty
+    // after clearing lines. The bonus scales with the number of
+    // lines cleared in that perfect clear.
+    if (board.every(row => row.every(cell => !cell))) {
+        const perfectClearBonusPerLine = 1000;
+        score += cleared * perfectClearBonusPerLine;
+    }
 
     lines += cleared;
     level = Math.floor(lines / 10) + 1;
