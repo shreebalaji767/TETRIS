@@ -27,7 +27,7 @@ self.addEventListener("fetch",event=>{
   // Some browsers request /favicon.ico automatically even when a
   // favicon link is present. Serve the real VOIDBLOCK icon instead.
   if(url.pathname.endsWith("/favicon.ico")){
-    event.respondWith(fetch(new URL("./icon.svg",self.registration.scope)));
+    event.respondWith(\n      fetch(new URL("./icon.svg",self.registration.scope)).catch(()=>caches.match("./icon.svg"))\n    );
     return;
   }
 
