@@ -1,11 +1,42 @@
 {
-  "name":"VOIDBLOCK — Tetris",
-  "short_name":"VOIDBLOCK",
-  "start_url":"./",
-  "scope":"./",
-  "display":"standalone",
-  "background_color":"#05070b",
-  "theme_color":"#070a10",
-  "description":"A responsive Tetris game.",
-  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "name": "VOIDBLOCK — Tetris",
+  "short_name": "VOIDBLOCK",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#05070b",
+  "theme_color": "#070a10",
+  "description": "A responsive Tetris game.",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Play VOIDBLOCK",
+      "short_name": "Play",
+      "url": "./",
+      "icons": [
+        {
+          "src": "icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "categories": [
+    "games",
+    "entertainment"
+  ]
 }
