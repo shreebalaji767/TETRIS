@@ -34,7 +34,7 @@ canvas#game{display:block;width:100%;height:100%;background:#080b11;border:2px s
 .overlay-actions{width:min(240px,90%);display:grid;gap:8px}.overlay-actions button{min-height:46px}
 .primary{background:#fff;color:#05070b}.danger{background:#32151a;border-color:#74303a}
 .controls{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
-.controls button{min-height:52px;font-size:19px}.controls .wide{grid-column:span 2}.controls .drop{grid-column:span 4;background:#f0f2f5;color:#05070b;font-size:12px}
+.controls button{min-height:52px;font-size:19px}.controls .rotate-btn{font-size:22px;background:#172131;border-color:#3a4a61}.controls .rotate-btn:active{background:#26364c}.controls .wide{grid-column:span 2}.controls .drop{grid-column:span 4;background:#f0f2f5;color:#05070b;font-size:12px}
 .hint{font-size:10px;color:var(--muted);line-height:1.5;text-align:center}.hidden{display:none!important}
 .status{font-size:10px;color:var(--muted);text-align:center;min-height:15px}
 @media(max-width:800px){
@@ -85,15 +85,16 @@ canvas#game{display:block;width:100%;height:100%;background:#080b11;border:2px s
       </div>
       <div class="controls" aria-label="Touch controls">
         <button id="left" aria-label="Move left">◀</button>
-        <button id="rotateCCW" aria-label="Rotate counter-clockwise">↺</button>
-        <button id="rotate" aria-label="Rotate clockwise">↻</button>
+        <button id="rotateCCW" class="rotate-btn" aria-label="Rotate counter-clockwise">↺</button>
+        <button id="rotate" class="rotate-btn" aria-label="Rotate clockwise">↻</button>
         <button id="right" aria-label="Move right">▶</button>
+        <button id="rotate180" class="wide rotate-btn" aria-label="Rotate 180 degrees">⟳ 180°</button>
         <button id="holdBtn" class="wide" aria-label="Hold piece">HOLD</button>
         <button id="pause" class="wide" aria-label="Pause game">PAUSE</button>
         <button id="drop" class="drop" aria-label="Hard drop">HARD DROP</button>
       </div>
       <div id="status" class="status"></div>
-      <div class="hint">← → MOVE · ↑ / X ROTATE · Z ROTATE BACK · ↓ SOFT DROP · SPACE HARD DROP · C HOLD · P PAUSE</div>
+      <div class="hint">← → MOVE · ↺ ↻ ROTATE · 180° ROTATE · ↓ SOFT DROP · SPACE HARD DROP · C HOLD · P PAUSE</div>
     </section>
 
     <section class="side right">
@@ -127,7 +128,7 @@ const nextCanvas=document.getElementById("next"), nextCtx=nextCanvas.getContext(
 const scoreEl=document.getElementById("score"), linesEl=document.getElementById("lines"), levelEl=document.getElementById("level"), bestEl=document.getElementById("best"), statusEl=document.getElementById("status");
 const overlay=document.getElementById("overlay"), overlayTitle=document.getElementById("overlayTitle"), overlayText=document.getElementById("overlayText");
 const primary=document.getElementById("primary"), secondary=document.getElementById("secondary"), restartBtn=document.getElementById("restart"), exitBtn=document.getElementById("exit");
-const buttons={left:document.getElementById("left"),right:document.getElementById("right"),rotate:document.getElementById("rotate"),rotateCCW:document.getElementById("rotateCCW"),hold:document.getElementById("holdBtn"),pause:document.getElementById("pause"),drop:document.getElementById("drop")};
+const buttons={left:document.getElementById("left"),right:document.getElementById("right"),rotate:document.getElementById("rotate"),rotateCCW:document.getElementById("rotateCCW"),rotate180:document.getElementById("rotate180"),hold:document.getElementById("holdBtn"),pause:document.getElementById("pause"),drop:document.getElementById("drop")};
 
 let board=[],bag=[],queue=[],current=null,held=null,canHold=true;
 let running=false,paused=false,gameOver=false,score=0,lines=0,level=1,best=loadBest();
@@ -241,7 +242,8 @@ function move(dx){
 }
 function softDrop(){
   if(!running||paused||!current)return;
-  if(!stepDown(true))lock();
+  if(collides(current,current.x,current.y+1)) lock();
+  else { current.y++; fallTimer=0; }
   draw();
 }
 function hardDrop(){
@@ -266,6 +268,7 @@ function rotate(dir){
     }
   }
 }
+function rotate180(){ if(!running||paused||!current)return; rotate(1); if(running&&!paused&&current) rotate(1); }
 function hold(){
   if(!running||paused||!current||!canHold)return;
   const type=current.type;
@@ -330,7 +333,7 @@ function showGameOver(){
 function hideOverlay(){overlay.classList.add("hidden")}
 
 primary.onclick=start;secondary.onclick=resume;restartBtn.onclick=restart;exitBtn.onclick=exitGame;buttons.pause.onclick=()=>paused?resume():pause();
-buttons.left.onclick=()=>move(-1);buttons.right.onclick=()=>move(1);buttons.rotate.onclick=()=>rotate(1);buttons.rotateCCW.onclick=()=>rotate(-1);buttons.hold.onclick=hold;buttons.drop.onclick=hardDrop;
+buttons.left.onclick=()=>move(-1);buttons.right.onclick=()=>move(1);buttons.rotate.onclick=()=>rotate(1);buttons.rotateCCW.onclick=()=>rotate(-1);buttons.rotate180.onclick=rotate180;buttons.hold.onclick=hold;buttons.drop.onclick=hardDrop;
 
 function repeatButton(btn,fn,delay=75){
   let timer=0,interval=0;
