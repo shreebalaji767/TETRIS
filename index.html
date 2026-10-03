@@ -176,6 +176,13 @@ button:focus-visible {
     font-weight: 900;
 }
 
+.music-panel{background:linear-gradient(145deg,#111722,#090c12);border:1px solid #252d3a;border-radius:16px;padding:11px;margin-top:8px}
+.music-title{color:#7e899b;font-size:10px;letter-spacing:2px;margin-bottom:7px}
+.music-row{display:grid;grid-template-columns:1fr auto;gap:6px}
+.music-btn,.music-file{min-height:34px;border:1px solid #293342;background:#151a24;color:#fff;border-radius:9px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.music-file{padding:0 10px}
+.music-track{margin-top:6px;color:#8d99ad;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-volume{width:100%;margin-top:7px;accent-color:#fff}
 #nextCanvas,
 #holdCanvas {
     width: 100%;
@@ -544,6 +551,12 @@ button:focus-visible {
         gap: 6px;
     }
 
+    .music-panel{position:absolute;right:max(6px,env(safe-area-inset-right));top:max(74px,calc(env(safe-area-inset-top) + 68px));z-index:25;width:126px;padding:7px;border-radius:9px;background:rgba(8,11,17,.88);backdrop-filter:blur(5px)}
+    .music-title{font-size:7px;margin-bottom:4px}
+    .music-row{gap:4px}
+    .music-btn,.music-file{min-height:28px;font-size:8px;border-radius:7px;padding:0 5px}
+    .music-track{font-size:7px;margin-top:4px}
+    .music-volume{margin-top:4px}
     .panel {
         background: rgba(8, 11, 17, .82);
         border-radius: 9px;
@@ -1111,6 +1124,17 @@ body.void-light .upgrade-hud .best{background:#f3f5f8;border-color:#cbd2dc;color
             </div>
 
 
+            <div class="music-panel" aria-label="Music controls">
+                <div class="music-title">MUSIC</div>
+                <div class="music-row">
+                    <button id="musicBtn" class="music-btn" type="button">♫ MUSIC</button>
+                    <label class="music-file" for="musicFile">LOAD</label>
+                    <input id="musicFile" type="file" accept="audio/*" hidden>
+                </div>
+                <div class="music-track" id="musicTrack">LOAD A TRACK TO PLAY</div>
+                <input id="musicVolume" class="music-volume" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Music volume">
+            </div>
+
             <div class="quick-actions" aria-label="Game actions">
                 <button id="pwaInstall" class="pwa-install" type="button" aria-label="Install VOIDBLOCK">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/></svg>
@@ -1445,6 +1469,15 @@ const gameExitBtn =
         "gameExitBtn"
     );
 
+const musicBtn = document.getElementById("musicBtn");
+const musicFile = document.getElementById("musicFile");
+const musicVolume = document.getElementById("musicVolume");
+const musicTrack = document.getElementById("musicTrack");
+const music = new Audio();
+music.loop = true;
+music.preload = "metadata";
+music.volume = Number(musicVolume.value);
+
 
 /* =========================================================
    GAME STATE
@@ -1459,6 +1492,12 @@ let nextPiece;
 let holdPiece = null;
 
 let canHold = true;
+
+let bag = [];
+
+let musicObjectUrl = null;
+
+let musicEnabled = false;
 
 let score = 0;
 let combo = -1;
@@ -1604,15 +1643,22 @@ function cloneMatrix(matrix) {
    RANDOM PIECE
    ========================================================= */
 
+function refillBag() {
+    bag = PIECES.map((_, index) => index);
+    for (let i = bag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bag[i], bag[j]] = [bag[j], bag[i]];
+    }
+}
+
 function randomPiece() {
+
+    if (!bag.length) refillBag();
 
     const matrix =
         cloneMatrix(
             PIECES[
-                Math.floor(
-                    Math.random() *
-                    PIECES.length
-                )
+                bag.pop()
             ]
         );
 
@@ -1658,6 +1704,10 @@ function resetGame() {
     holdPiece = null;
 
     canHold = true;
+
+    bag = [];
+
+    refillBag();
 
 
     current =
@@ -3505,6 +3555,62 @@ function loop(time) {
             );
     }
 }
+
+
+/* =========================================================
+   MUSIC
+   ========================================================= */
+
+function setMusicLabel(text) {
+    if (musicTrack) musicTrack.textContent = text;
+}
+
+async function toggleMusic(force) {
+    if (!music.src) {
+        setMusicLabel("LOAD A TRACK FIRST");
+        return;
+    }
+
+    const next = typeof force === "boolean" ? force : !musicEnabled;
+
+    if (next) {
+        try {
+            await music.play();
+            musicEnabled = true;
+            musicBtn.textContent = "Ⅱ MUSIC";
+        } catch {
+            setMusicLabel("PRESS MUSIC TO START");
+        }
+    } else {
+        music.pause();
+        musicEnabled = false;
+        musicBtn.textContent = "♫ MUSIC";
+    }
+}
+
+musicBtn?.addEventListener("click", () => toggleMusic());
+
+musicVolume?.addEventListener("input", () => {
+    music.volume = Number(musicVolume.value);
+});
+
+musicFile?.addEventListener("change", event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (musicObjectUrl) URL.revokeObjectURL(musicObjectUrl);
+
+    musicObjectUrl = URL.createObjectURL(file);
+    music.src = musicObjectUrl;
+    music.load();
+    setMusicLabel(file.name);
+    toggleMusic(true);
+});
+
+music.addEventListener("ended", () => {
+    musicEnabled = false;
+    if (musicBtn) musicBtn.textContent = "♫ MUSIC";
+});
 
 
 /* =========================================================
