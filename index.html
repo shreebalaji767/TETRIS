@@ -4318,7 +4318,8 @@ showMainMenu();
    ========================================================= */
 (function upgradePack(){
     const KEY="voidblock-best-score";
-    let best=0;\n    try { best=Number(localStorage.getItem(KEY)||0); } catch {}
+    let best=0;
+    try { best=Number(localStorage.getItem(KEY)||0); } catch {}
         function getScore(){
         const el=document.getElementById("score");
         return el?Number(String(el.textContent).replace(/[^0-9]/g,""))||0:0;
@@ -4338,7 +4339,8 @@ showMainMenu();
     }
     const install=document.getElementById("installUpgrade");
     let deferred=null;
-    window.addEventListener("beforeinstallprompt",e=>{deferred=e;if(install)install.classList.add("show")});\n    window.addEventListener("appinstalled",()=>{deferred=null;if(install)install.classList.remove("show");toast("VOIDBLOCK INSTALLED")});
+    window.addEventListener("beforeinstallprompt",e=>{deferred=e;if(install)install.classList.add("show")});
+    window.addEventListener("appinstalled",()=>{deferred=null;if(install)install.classList.remove("show");toast("VOIDBLOCK INSTALLED")});
     if(install)install.addEventListener("click",async()=>{if(!deferred)return;try{await deferred.prompt();await deferred.userChoice}catch{}deferred=null;install.classList.remove("show")});
     document.addEventListener("visibilitychange",()=>{if(document.hidden&&typeof pauseGame==="function"&&running&&!paused)pauseGame();});
         setInterval(saveBest,500);
