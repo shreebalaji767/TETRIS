@@ -16,7 +16,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VOIDBLOCK">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="shortcut icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
 
 <style>
@@ -888,39 +889,51 @@ button:focus-visible {
 .upgrade-toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:800px){.upgrade-hud{display:none}}
 
-/* ===== FINAL DEVICE / BRANDING UPGRADE ===== */
+
+
+/* ===== DEVICE POLISH / QUICK ACTIONS ===== */
+.quick-actions{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.quick-btn{width:100%;min-height:40px;border:1px solid #293342;background:#111722;color:#fff;border-radius:10px;font-weight:800}
+.pwa-install{display:none}
+.pwa-install.show{display:flex}
+.pwa-install,.quick-btn{align-items:center;justify-content:center;gap:7px}
+.pwa-install svg{width:16px;height:16px;flex:0 0 auto}
 .logo-wrap{display:flex;justify-content:center}
 .logo{display:flex;align-items:center;justify-content:center;gap:9px;color:#fff;text-decoration:none;letter-spacing:4px}
 .logo-icon{width:34px;height:34px;border-radius:9px;box-shadow:0 0 24px #fff1}
-.pwa-install{display:none;align-items:center;justify-content:center;gap:7px;width:100%;min-height:42px;margin-top:8px;background:#fff;color:#05070b;border:1px solid #fff;border-radius:12px;font-weight:900}
-.pwa-install.show{display:flex}
-.pwa-install svg{width:16px;height:16px}
+.logo span{line-height:1}
 @media(max-width:800px){
- body{min-height:100dvh}
- #app{min-height:100dvh;padding:max(4px,env(safe-area-inset-top)) max(4px,env(safe-area-inset-right)) max(4px,env(safe-area-inset-bottom)) max(4px,env(safe-area-inset-left))}
- .game-shell{width:100%;height:100%;min-height:0;display:flex;flex-direction:column;gap:0;justify-content:flex-start;align-items:center}
- .logo-wrap{position:absolute;top:max(5px,env(safe-area-inset-top));left:0;right:0;z-index:20}
- .logo{font-size:clamp(14px,4.2vw,21px);letter-spacing:2.5px}
- .logo-icon{width:clamp(24px,7vw,32px);height:clamp(24px,7vw,32px)}
- .game-board-wrap,.board-wrap,#game-wrap{width:min(94vw,calc((100dvh - 150px)/2),430px)!important;max-height:calc(100dvh - 150px)!important}
- .side{display:contents}
- .panel{max-width:96vw}
-}
-@media(max-width:430px){
- .game-shell{overflow:hidden}
+  .quick-actions{position:absolute;right:max(6px,env(safe-area-inset-right));top:max(5px,env(safe-area-inset-top));z-index:30;margin:0;width:auto;gap:4px}
+  .quick-btn,.pwa-install{width:auto;min-height:32px;height:32px;padding:0 9px;border-radius:9px;font-size:9px}
+  .pwa-install svg{width:13px;height:13px}
+  .pwa-install span{display:none}
+  .logo-wrap{position:absolute;top:max(5px,env(safe-area-inset-top));left:0;right:0;z-index:20}
+  .logo{font-size:clamp(14px,4.2vw,21px);letter-spacing:2.5px}
+  .logo-icon{width:clamp(24px,7vw,32px);height:clamp(24px,7vw,32px)}
 }
 @media(orientation:landscape) and (max-height:650px){
- #app{padding:4px}
- .game-shell{display:grid;grid-template-columns:120px minmax(190px,44vh) 120px;gap:10px}
- .logo-wrap{position:static}
- .logo{font-size:16px}
- .logo-icon{width:24px;height:24px}
+  .quick-actions{position:static;display:flex;margin-top:5px}
+  .quick-btn,.pwa-install{min-height:32px;height:32px;font-size:9px}
+  .logo-wrap{position:static}
 }
-</style>
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+ 
+/* Accessible light theme */
+body.void-light{background:#eef1f5;color:#111}
+body.void-light .panel{background:linear-gradient(145deg,#fff,#e8ebf0);border-color:#cbd2dc;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+body.void-light .label{color:#596575}
+body.void-light .value,body.void-light .logo,body.void-light .quick-btn{color:#111}
+body.void-light .quick-btn{background:#fff;border-color:#cbd2dc}
+body.void-light #gameCanvas{background:#f8f9fb;border-color:#b9c1cc}
+body.void-light .upgrade-hud .best{background:#f3f5f8;border-color:#cbd2dc;color:#596575}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>
 </head>
 
 
 <body>
+<div id="srStatus" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
 <div id="app">
 
@@ -933,8 +946,11 @@ button:focus-visible {
 
         <aside class="side left-panel">
 
-            <div class="logo">
-                VOIDBLOCK
+            <div class="logo-wrap">
+                <a class="logo" href="./" aria-label="VOIDBLOCK home">
+                    <img src="icon.svg" alt="" class="logo-icon">
+                    <span>VOIDBLOCK</span>
+                </a>
             </div>
 
 
@@ -942,9 +958,7 @@ button:focus-visible {
 
                 <div class="label">
                     HOLD
-                </div><button id="pwaInstall" class="pwa-install" type="button" aria-label="Install VOIDBLOCK">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/></svg> INSTALL APP
-</button>
+                </div>
 
                 <canvas id="holdCanvas"></canvas>
 
@@ -1096,6 +1110,14 @@ button:focus-visible {
 
             </div>
 
+
+            <div class="quick-actions" aria-label="Game actions">
+                <button id="pwaInstall" class="pwa-install" type="button" aria-label="Install VOIDBLOCK">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/></svg>
+                    <span>INSTALL APP</span>
+                </button>
+                <button id="fullscreenBtn" class="quick-btn" type="button" aria-label="Toggle fullscreen">⛶ FULLSCREEN</button>
+            </div>
 
             <div class="controls">
 
@@ -4168,12 +4190,6 @@ showMainMenu();
 </script>
 
 
-<script>
-(()=>{let promptEvent=null;const b=document.getElementById('pwaInstall');if(!b)return;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;b.classList.add('show')});
-b.addEventListener('click',async()=>{if(!promptEvent)return;promptEvent.prompt();try{await promptEvent.userChoice}catch{}promptEvent=null;b.classList.remove('show')});
-window.addEventListener('appinstalled',()=>b.classList.remove('show'));
-})();
-</script>
+
 </body>
 </html>
