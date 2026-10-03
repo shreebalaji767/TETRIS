@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VOIDBLOCK">
+<meta name="color-scheme" content="dark">
+<meta name="format-detection" content="telephone=no">
 <title>VOIDBLOCK — Tetris</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
@@ -23,37 +25,57 @@ button:hover{border-color:#5b7595;transform:translateY(-1px)}
 button:active{transform:scale(.97)}
 button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 #app{width:100%;height:100dvh;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:center}
-.shell{width:min(1160px,100%);height:min(940px,100%);display:grid;grid-template-columns:190px minmax(280px,430px) 190px;gap:clamp(12px,3vw,30px);align-items:center;justify-content:center}
+.shell{width:min(1280px,100%);height:min(960px,100%);display:grid;grid-template-columns:minmax(170px,210px) minmax(280px,430px) minmax(190px,230px);gap:clamp(10px,2.5vw,30px);align-items:center;justify-content:center}
+.center{min-width:0;width:100%}
+.kicker{font-size:9px;color:var(--muted);letter-spacing:2px;text-align:center;margin:4px 0 7px}
+.status-pill{display:inline-flex;align-items:center;justify-content:center;min-height:22px;padding:3px 10px;border:1px solid #294057;border-radius:999px;background:#0a111be6;color:#9eb0c5;font-size:9px;letter-spacing:1px}
 .side{display:flex;flex-direction:column;gap:12px}.brand{text-align:center;font-size:clamp(21px,2.4vw,29px);font-weight:950;letter-spacing:5px;text-shadow:0 0 28px #67e8f922}
 .panel{background:linear-gradient(145deg,#142033e8,#0a111bdd);border:1px solid var(--line);border-radius:17px;padding:13px;box-shadow:0 15px 38px #0008,inset 0 1px #ffffff0a;backdrop-filter:blur(12px)}
 .label{font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:5px}.value{font-size:clamp(22px,2.3vw,28px);font-weight:950}
-.preview{width:100%;height:86px;display:block}.panel-title{text-align:center;color:var(--muted);font-size:9px;letter-spacing:2.5px;margin-bottom:4px}
-.next-list{display:grid;gap:5px}.next-item{height:55px;border-top:1px solid #ffffff06;padding-top:4px}.next-item canvas{width:100%;height:100%;display:block}
+.preview{width:100%;height:86px;display:block}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.stat{min-width:0}
+.stat .value{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.panel-title{text-align:center;color:var(--muted);font-size:9px;letter-spacing:2.5px;margin-bottom:4px}
+.next-list{display:grid;gap:4px}.next-item{height:48px;border-top:1px solid #ffffff06;padding-top:3px}.next-item:first-child{border-top:0}
+.next-item canvas{width:100%;height:100%;display:block}
+.mini-note{color:#65758b;font-size:8px;text-align:center;margin-top:6px;letter-spacing:.8px}.next-item canvas{width:100%;height:100%;display:block}
 .topbar{display:flex;justify-content:center;gap:7px;margin-bottom:7px}.topbar button{min-height:34px;padding:0 12px;font-size:10px;letter-spacing:1px}
-.board-wrap{position:relative;width:min(100%,430px);aspect-ratio:10/20;margin:auto}
+.board-wrap{position:relative;width:min(100%,430px);aspect-ratio:10/20;margin:auto;flex:none}
 canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px solid #34465f;border-radius:17px;box-shadow:0 0 0 1px #000,0 24px 60px #000c,0 0 45px #67e8f90d;touch-action:none;user-select:none}
 .overlay{position:absolute;inset:2px;border-radius:15px;background:#02050ae9;backdrop-filter:blur(15px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:22px;z-index:10}
 .overlay.hidden,.modal.hidden{display:none}.overlay h1{font-size:clamp(31px,8vw,56px);letter-spacing:6px}.overlay p{color:var(--muted);min-height:20px}
 .actions{width:min(250px,90%);display:grid;gap:8px}.actions button{min-height:48px}.primary{background:linear-gradient(145deg,#fff,#dce7f2);color:#06101a;border-color:#fff}.danger{background:#32131c;border-color:#703342;color:#fecdd3}
-.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}.controls button{min-height:55px;font-size:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.controls .rotate{background:linear-gradient(145deg,#1b2e46,#111c2b);border-color:#486481}.control-label{font-size:7px;color:#93a5bb;letter-spacing:1px}.controls .wide{grid-column:span 2}.controls .drop{grid-column:span 4;background:linear-gradient(145deg,#f8fafc,#dbe5ee);color:#06101a;border-color:#fff;font-size:11px;letter-spacing:1px}
-.hint{text-align:center;color:#718197;font-size:9px;margin-top:6px;line-height:1.4}.status{text-align:center;color:#aebdce;font-size:10px;min-height:16px;margin-top:2px}
+.controls{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:10px}
+.controls button{min-height:55px;font-size:21px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.controls .move{grid-column:span 1}.controls .utility{grid-column:span 1}.controls .rotate{background:linear-gradient(145deg,#1b2e46,#111c2b);border-color:#486481}.control-label{font-size:7px;color:#93a5bb;letter-spacing:1px}.controls .wide{grid-column:span 2}.controls .drop{grid-column:span 3;background:linear-gradient(145deg,#f8fafc,#dbe5ee);color:#06101a;border-color:#fff;font-size:11px;letter-spacing:1px}
+.hint{text-align:center;color:#718197;font-size:9px;margin-top:6px;line-height:1.4}.status{text-align:center;color:#aebdce;font-size:10px;min-height:18px;margin-top:4px}
+.key-help{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:7px}
+.key-help span{padding:3px 6px;border:1px solid #233248;border-radius:6px;color:#718197;background:#0a1018;font-size:8px;letter-spacing:.3px}
+.board-frame{position:relative;padding:6px;border:1px solid #203047;border-radius:21px;background:linear-gradient(145deg,#101b29,#060b12);box-shadow:0 22px 65px #000b,inset 0 1px #ffffff08}
 .modal{position:fixed;inset:0;background:#02050abf;backdrop-filter:blur(14px);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}.modal-card{width:min(430px,94vw);max-height:min(90dvh,700px);overflow:auto;background:linear-gradient(145deg,#142033,#09111c);border:1px solid var(--line2);border-radius:20px;padding:18px;box-shadow:0 25px 80px #000b}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.modal-head h2{font-size:20px}.close{width:38px;height:38px}.setting{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #ffffff0b}.setting span{font-size:13px}.setting small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.toggle{width:54px;height:30px;border-radius:20px;padding:3px;background:#172131}.toggle i{display:block;width:22px;height:22px;border-radius:50%;background:#7b8797;transition:.2s}.toggle.on{background:#164556;border-color:#3c91aa}.toggle.on i{transform:translateX(23px);background:var(--cyan)}.modal-foot{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.modal-foot button{min-height:44px}
 .install{display:none}.install.show{display:block}
 @media(max-width:800px){
+ .center{width:100%}
+ .key-help{display:none}
+ .board-frame{padding:4px;border-radius:18px}
+
  #app{padding:4px}.shell{width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-start;position:relative}
  .side{display:contents}.brand{position:absolute;top:5px;left:50%;transform:translateX(-50%);font-size:clamp(15px,4.5vw,21px);z-index:5;white-space:nowrap}
  .left .panel,.right .panel{position:absolute;z-index:5;padding:5px 7px;background:#080e17e6;border-radius:10px}
- .left .panel:nth-child(2){left:5px;top:33px;width:76px}.left .panel:nth-child(3){left:5px;top:106px;width:76px}.left .panel:nth-child(4){left:5px;top:161px;width:76px}
- .right .panel:nth-child(1){right:5px;top:33px;width:78px}.right .panel:nth-child(2){right:5px;top:161px;width:78px}
- .label{font-size:7px;letter-spacing:1px}.value{font-size:14px}.preview{height:56px}.panel-title{font-size:7px}.next-list{gap:2px}.next-item{height:42px}
+ .left .panel:nth-child(2){left:5px;top:33px;width:76px}.left .panel:nth-child(3){left:5px;top:106px;width:76px}.left .panel:nth-child(4){left:5px;top:161px;width:76px}.left .panel:nth-child(5){left:5px;top:216px;width:76px}
+ .right .panel:nth-child(1){right:5px;top:33px;width:78px}.right .panel:nth-child(2){right:5px;top:161px;width:78px}.right .panel:nth-child(3){right:5px;top:216px;width:78px}
+ .label{font-size:7px;letter-spacing:1px}.value{font-size:14px}.preview{height:56px}.panel-title{font-size:7px}.next-list{gap:2px}.next-item{height:36px}
  .board-wrap{width:min(92vw,calc((100dvh - 178px)/2),430px);max-height:calc(100dvh - 178px);margin-top:30px}
  .topbar{position:absolute;top:28px;right:5px;z-index:6;margin:0}.topbar button{min-height:31px;padding:0 8px;font-size:9px}
- .controls{width:min(96vw,430px);margin:6px auto 0;gap:5px}.controls button{min-height:clamp(42px,7dvh,55px);font-size:clamp(16px,5vw,21px);border-radius:12px}.controls .drop{min-height:43px}.hint{display:none}
+ .controls{width:min(96vw,430px);margin:6px auto 0;gap:5px;grid-template-columns:repeat(4,1fr)}
+ .controls button{min-height:clamp(40px,6.5dvh,54px);font-size:clamp(15px,5vw,21px);border-radius:12px}
+ .controls .wide{grid-column:span 2}.controls .drop{grid-column:span 2;min-height:43px}
+ .status{font-size:9px}
 }
-@media(max-width:390px){.left .panel:nth-child(4),.right .panel:nth-child(2){display:none}.board-wrap{width:min(91vw,calc((100dvh - 151px)/2));max-height:calc(100dvh - 151px)}.controls{gap:4px}.controls button{min-height:40px}}
+@media(max-width:390px){.left .panel:nth-child(4),.left .panel:nth-child(5),.right .panel:nth-child(2),.right .panel:nth-child(3){display:none}.board-wrap{width:min(91vw,calc((100dvh - 184px)/2));max-height:calc(100dvh - 184px)}.controls{gap:4px}.controls button{min-height:39px}.topbar button{min-height:29px;padding:0 6px;font-size:8px}}
 @media(max-height:600px) and (orientation:landscape){
- #app{padding:3px}.shell{display:grid;grid-template-columns:125px minmax(180px,38vh) 150px;gap:8px}.brand{position:static;transform:none;font-size:15px}.board-wrap{grid-column:2;width:min(38vh,300px);max-height:calc(100dvh - 8px)}
- .topbar{position:absolute;left:5px;top:5px;z-index:8}.controls{position:absolute;right:4px;bottom:4px;width:150px;grid-template-columns:repeat(2,1fr);margin:0;gap:5px}.controls .drop{grid-column:span 2}.controls button{min-height:36px;font-size:14px}.hint{display:none}
+ #app{padding:3px}.shell{display:grid;grid-template-columns:120px minmax(180px,38vh) 160px;gap:8px}.brand{position:static;transform:none;font-size:15px}.board-wrap{grid-column:2;width:min(38vh,300px);max-height:calc(100dvh - 8px)}
+ .topbar{position:absolute;left:5px;top:5px;z-index:8}.controls{position:absolute;right:4px;bottom:4px;width:160px;grid-template-columns:repeat(2,1fr);margin:0;gap:5px}.controls .drop{grid-column:span 2}.controls button{min-height:36px;font-size:14px}.hint{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -66,13 +88,15 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 <div class="panel"><div class="label">SCORE</div><div id="score" class="value">0</div></div>
 <div class="panel"><div class="label">LINES</div><div id="lines" class="value">0</div></div>
 <div class="panel"><div class="label">LEVEL</div><div id="level" class="value">1</div></div>
+<div class="panel"><div class="label">BEST</div><div id="bestMobile" class="value">0</div></div>
 </section>
-<section>
+<section class="center">
+<div class="kicker"><span class="status-pill" id="statePill">READY</span></div>
 <div class="topbar">
-<button id="settingsBtn" aria-label="Open settings">⚙ SETTINGS</button>
+<button id="fullscreenBtn" aria-label="Toggle fullscreen">⛶ FULL</button><button id="settingsBtn" aria-label="Open settings">⚙ SETTINGS</button>
 <button id="installBtn" class="install" aria-label="Install game">＋ INSTALL</button>
 </div>
-<div class="board-wrap">
+<div class="board-frame"><div class="board-wrap">
 <canvas id="game" aria-label="Tetris game board"></canvas>
 <div id="overlay" class="overlay">
 <h1 id="overlayTitle">VOIDBLOCK</h1><p id="overlayText">READY?</p>
@@ -85,14 +109,18 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 <button id="right" aria-label="Move right">▶<span class="control-label">RIGHT</span></button>
 <button id="rotate180" class="wide rotate" aria-label="Rotate 180 degrees">⟳ <span class="control-label">180°</span></button>
 <button id="holdBtn" class="wide" aria-label="Hold piece">HOLD</button>
-<button id="pause" class="wide" aria-label="Pause game">PAUSE</button>
-<button id="drop" class="drop" aria-label="Hard drop">HARD DROP</button>
+<button id="softDrop" class="utility" aria-label="Soft drop">▼<span class="control-label">SOFT</span></button>
+<button id="pause" class="utility" aria-label="Pause game">Ⅱ<span class="control-label">PAUSE</span></button>
+<button id="drop" class="drop" aria-label="Hard drop">⬇ HARD DROP</button>
 </div>
-<div id="status" class="status"></div><div class="hint">← → MOVE · ↺ ↻ ROTATE · A 180° · ↓ SOFT DROP · SPACE HARD DROP · C HOLD · P PAUSE</div>
+<div id="status" class="status" aria-live="polite"></div>
+<div class="key-help"><span>← → MOVE</span><span>↓ SOFT</span><span>↺ ↻ ROTATE</span><span>A 180°</span><span>SPACE DROP</span><span>C HOLD</span><span>P PAUSE</span></div>
+<div class="hint">Touch: swipe to move • tap to rotate • swipe up to drop</div>
 </section>
 <section class="side right">
-<div class="panel"><div class="panel-title">NEXT</div><div class="next-list"><div class="next-item"><canvas id="next0" width="160" height="55"></canvas></div><div class="next-item"><canvas id="next1" width="160" height="55"></canvas></div><div class="next-item"><canvas id="next2" width="160" height="55"></canvas></div></div></div>
+<div class="panel"><div class="panel-title">NEXT</div><div class="next-list"><div class="next-item"><canvas id="next0" width="160" height="55"></canvas></div><div class="next-item"><canvas id="next1" width="160" height="55"></canvas></div><div class="next-item"><canvas id="next2" width="160" height="48"></canvas></div></div><div class="next-item"><canvas id="next3" width="160" height="48"></canvas></div><div class="next-item"><canvas id="next4" width="160" height="48"></canvas></div></div>
 <div class="panel"><div class="label">BEST</div><div id="best" class="value">0</div></div>
+<div class="panel"><div class="label">QUEUE</div><div class="mini-note">5-PIECE PREVIEW</div></div>
 </section>
 </main></div>
 
@@ -113,11 +141,11 @@ const COLORS={I:"#35d8ff",J:"#5577ff",L:"#ffad45",O:"#ffe45c",S:"#62e779",T:"#bd
 const SHAPES={I:[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],J:[[1,0,0],[1,1,1],[0,0,0]],L:[[0,0,1],[1,1,1],[0,0,0]],O:[[1,1],[1,1]],S:[[0,1,1],[1,1,0],[0,0,0]],T:[[0,1,0],[1,1,1],[0,0,0]],Z:[[1,1,0],[0,1,1],[0,0,0]]};
 const TYPES=Object.keys(SHAPES),game=document.getElementById("game"),ctx=game.getContext("2d");
 const holdCanvas=document.getElementById("hold"),holdCtx=holdCanvas.getContext("2d");
-const nextCanvases=[0,1,2].map(i=>document.getElementById("next"+i)),nextCtx=nextCanvases.map(c=>c.getContext("2d"));
-const scoreEl=document.getElementById("score"),linesEl=document.getElementById("lines"),levelEl=document.getElementById("level"),bestEl=document.getElementById("best"),statusEl=document.getElementById("status");
+const nextCanvases=[0,1,2,3,4].map(i=>document.getElementById("next"+i)),nextCtx=nextCanvases.map(c=>c.getContext("2d"));
+const scoreEl=document.getElementById("score"),linesEl=document.getElementById("lines"),levelEl=document.getElementById("level"),bestEl=document.getElementById("best"),bestMobileEl=document.getElementById("bestMobile"),statusEl=document.getElementById("status"),statePill=document.getElementById("statePill");
 const overlay=document.getElementById("overlay"),overlayTitle=document.getElementById("overlayTitle"),overlayText=document.getElementById("overlayText"),primary=document.getElementById("primary"),secondary=document.getElementById("secondary"),restartBtn=document.getElementById("restart"),exitBtn=document.getElementById("exit");
-const settings=document.getElementById("settings"),settingsBtn=document.getElementById("settingsBtn"),closeSettings=document.getElementById("closeSettings"),closeSettings2=document.getElementById("closeSettings2"),installBtn=document.getElementById("installBtn");
-const buttons={left:document.getElementById("left"),right:document.getElementById("right"),rotate:document.getElementById("rotate"),rotateCCW:document.getElementById("rotateCCW"),rotate180:document.getElementById("rotate180"),hold:document.getElementById("holdBtn"),pause:document.getElementById("pause"),drop:document.getElementById("drop")};
+const settings=document.getElementById("settings"),fullscreenBtn=document.getElementById("fullscreenBtn"),settingsBtn=document.getElementById("settingsBtn"),closeSettings=document.getElementById("closeSettings"),closeSettings2=document.getElementById("closeSettings2"),installBtn=document.getElementById("installBtn");
+const buttons={left:document.getElementById("left"),right:document.getElementById("right"),rotate:document.getElementById("rotate"),rotateCCW:document.getElementById("rotateCCW"),rotate180:document.getElementById("rotate180"),hold:document.getElementById("holdBtn"),softDrop:document.getElementById("softDrop"),pause:document.getElementById("pause"),drop:document.getElementById("drop")};
 let board=[],bag=[],queue=[],current=null,held=null,canHold=true,running=false,paused=false,gameOver=false;
 let score=0,lines=0,level=1,best=loadBest(),raf=0,lastTime=0,fallTimer=0,lockTimer=0,cell=20;
 let swipe={x:0,y:0,t:0,active:false},audio=null,deferredInstall=null;
@@ -135,11 +163,11 @@ function refillBag(){bag.push(...shuffled())} function takeType(){if(!bag.length
 function makePiece(type){const m=clone(SHAPES[type]);return{type,matrix:m,x:Math.floor((COLS-m[0].length)/2),y:0,rotation:0}}
 function spawn(){fillQueue();current=makePiece(queue.shift());fillQueue();canHold=true;lockTimer=0;if(collides(current,current.x,current.y)){gameOver=true;running=false;showGameOver();cancelAnimationFrame(raf)}drawPreviews()}
 function resetState(){board=newBoard();bag=[];queue=[];held=null;canHold=true;score=0;lines=0;level=1;running=false;paused=false;gameOver=false;fallTimer=0;lockTimer=0;current=null;fillQueue();spawn();updateUI()}
-function start(){resetState();running=true;hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop);tone(220,.08,"sine",.02);buzz(8)}
+function start(){resetState();running=true;setState("PLAYING");hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop);tone(220,.08,"sine",.02);buzz(8)}
 function restart(){start()}
-function pause(){if(!running)return;paused=true;running=false;cancelAnimationFrame(raf);showPause()}
-function resume(){if(gameOver)return;paused=false;running=true;hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop)}
-function exitGame(){running=false;paused=false;gameOver=false;cancelAnimationFrame(raf);resetState();showMain()}
+function pause(){if(!running)return;paused=true;running=false;setState("PAUSED");cancelAnimationFrame(raf);showPause()}
+function resume(){if(gameOver)return;paused=false;running=true;setState("PLAYING");hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop)}
+function exitGame(){running=false;paused=false;gameOver=false;cancelAnimationFrame(raf);resetState();setState("READY");showMain()}
 function loop(t){if(!running||paused)return;const dt=Math.min(100,t-lastTime);lastTime=t;fallTimer+=dt;const speed=Math.max(70,850-(level-1)*65);if(fallTimer>=speed){fallTimer=0;stepDown(dt)}draw();raf=requestAnimationFrame(loop)}
 function collides(p,x=p.x,y=p.y,m=p.matrix){for(let r=0;r<m.length;r++)for(let c=0;c<m[r].length;c++)if(m[r][c]){const bx=x+c,by=y+r;if(bx<0||bx>=COLS||by>=ROWS+HIDDEN)return true;if(by>=0&&board[by][bx])return true}return false}
 function merge(){for(let r=0;r<current.matrix.length;r++)for(let c=0;c<current.matrix[r].length;c++)if(current.matrix[r][c]){const y=current.y+r,x=current.x+c;if(y>=0)board[y][x]=current.type}}
@@ -159,16 +187,18 @@ function draw(){ctx.clearRect(0,0,game.width,game.height);ctx.fillStyle="#060a11
 function fitCanvas(){const rect=game.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),w=Math.max(200,Math.floor(rect.width*dpr)),h=Math.max(400,Math.floor(rect.height*dpr));if(game.width!==w||game.height!==h){game.width=w;game.height=h}draw()}
 function previewPiece(c,canvas,type){c.clearRect(0,0,canvas.width,canvas.height);c.fillStyle="#080d15";c.fillRect(0,0,canvas.width,canvas.height);if(!type)return;const m=SHAPES[type],size=Math.min(canvas.width/(m[0].length+2),canvas.height/(m.length+2)),ox=(canvas.width-m[0].length*size)/2,oy=(canvas.height-m.length*size)/2;for(let r=0;r<m.length;r++)for(let col=0;col<m[r].length;col++)if(m[r][col]){c.fillStyle=COLORS[type];c.fillRect(ox+col*size+1,oy+r*size+1,size-2,size-2)}}
 function drawPreviews(){previewPiece(holdCtx,holdCanvas,held);nextCanvases.forEach((c,i)=>previewPiece(nextCtx[i],c,queue[i]))}
-function updateUI(){scoreEl.textContent=score.toLocaleString();linesEl.textContent=lines;levelEl.textContent=level;bestEl.textContent=best.toLocaleString();drawPreviews()}
+function updateUI(){scoreEl.textContent=score.toLocaleString();linesEl.textContent=lines;levelEl.textContent=level;bestEl.textContent=best.toLocaleString();if(bestMobileEl)bestMobileEl.textContent=best.toLocaleString();drawPreviews()}
+function setState(text){if(statePill)statePill.textContent=text}
 function setStatus(t){statusEl.textContent=t;clearTimeout(setStatus.timer);setStatus.timer=setTimeout(()=>statusEl.textContent="",1100)}
-function showMain(){overlayTitle.textContent="VOIDBLOCK";overlayText.textContent="READY?";primary.textContent="PLAY";primary.classList.remove("hidden");secondary.classList.add("hidden");restartBtn.classList.add("hidden");exitBtn.classList.add("hidden");overlay.classList.remove("hidden")}
-function showPause(){overlayTitle.textContent="PAUSED";overlayText.textContent="GAME PAUSED";primary.classList.add("hidden");secondary.textContent="RESUME";secondary.classList.remove("hidden");restartBtn.classList.remove("hidden");exitBtn.classList.remove("hidden");overlay.classList.remove("hidden")}
-function showGameOver(){overlayTitle.textContent="GAME OVER";overlayText.textContent="SCORE "+score.toLocaleString();primary.textContent="PLAY AGAIN";primary.classList.remove("hidden");secondary.classList.add("hidden");restartBtn.classList.add("hidden");exitBtn.classList.remove("hidden");overlay.classList.remove("hidden")}
+function showMain(){setState("READY");overlayTitle.textContent="VOIDBLOCK";overlayText.textContent="READY?";primary.textContent="PLAY";primary.classList.remove("hidden");secondary.classList.add("hidden");restartBtn.classList.add("hidden");exitBtn.classList.add("hidden");overlay.classList.remove("hidden")}
+function showPause(){setState("PAUSED");overlayTitle.textContent="PAUSED";overlayText.textContent="GAME PAUSED";primary.classList.add("hidden");secondary.textContent="RESUME";secondary.classList.remove("hidden");restartBtn.classList.remove("hidden");exitBtn.classList.remove("hidden");overlay.classList.remove("hidden")}
+function showGameOver(){setState("GAME OVER");overlayTitle.textContent="GAME OVER";overlayText.textContent="SCORE "+score.toLocaleString();primary.textContent="PLAY AGAIN";primary.classList.remove("hidden");secondary.classList.add("hidden");restartBtn.classList.add("hidden");exitBtn.classList.remove("hidden");overlay.classList.remove("hidden")}
 function hideOverlay(){overlay.classList.add("hidden")}
-primary.onclick=start;secondary.onclick=resume;restartBtn.onclick=restart;exitBtn.onclick=exitGame;buttons.pause.onclick=()=>paused?resume():pause();
-buttons.left.onclick=()=>move(-1);buttons.right.onclick=()=>move(1);buttons.rotate.onclick=()=>rotate(1);buttons.rotateCCW.onclick=()=>rotate(-1);buttons.rotate180.onclick=rotate180;buttons.hold.onclick=hold;buttons.drop.onclick=hardDrop;
-function repeatButton(btn,fn,delay=75){let timer=0,interval=0;const stop=()=>{clearTimeout(timer);clearInterval(interval);timer=interval=0};btn.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;e.preventDefault();fn();timer=setTimeout(()=>interval=setInterval(fn,delay),170)});["pointerup","pointercancel","pointerleave"].forEach(x=>btn.addEventListener(x,stop))}
-repeatButton(buttons.left,()=>move(-1));repeatButton(buttons.right,()=>move(1));repeatButton(buttons.drop,softDrop,55);
+primary.onclick=start;secondary.onclick=resume;restartBtn.onclick=restart;exitBtn.onclick=exitGame;
+buttons.rotate.onclick=()=>rotate(1);buttons.rotateCCW.onclick=()=>rotate(-1);buttons.rotate180.onclick=rotate180;buttons.hold.onclick=hold;buttons.pause.onclick=()=>paused?resume():pause();
+buttons.drop.onclick=hardDrop;buttons.softDrop.onclick=softDrop;
+function repeatButton(btn,fn,delay=75){let timer=0,interval=0;const stop=()=>{clearTimeout(timer);clearInterval(interval);timer=interval=0};btn.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;e.preventDefault();fn();btn.dataset.pressed="1";timer=setTimeout(()=>interval=setInterval(fn,delay),170)});["pointerup","pointercancel","pointerleave"].forEach(x=>btn.addEventListener(x,stop));btn.addEventListener("click",e=>{if(btn.dataset.pressed==="1"){e.preventDefault();e.stopPropagation();btn.dataset.pressed="0"}},{capture:true})}
+repeatButton(buttons.left,()=>move(-1));repeatButton(buttons.right,()=>move(1));repeatButton(buttons.softDrop,softDrop,55);
 document.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","ArrowDown","ArrowUp"," ","c","C","x","X","z","Z","a","A","p","P","r","R"].includes(e.key))e.preventDefault();if(e.key==="ArrowLeft")move(-1);else if(e.key==="ArrowRight")move(1);else if(e.key==="ArrowDown")softDrop();else if(e.key==="ArrowUp"||e.key==="x"||e.key==="X")rotate(1);else if(e.key==="z"||e.key==="Z")rotate(-1);else if(e.key==="a"||e.key==="A")rotate180();else if(e.key===" ")hardDrop();else if(e.key==="c"||e.key==="C")hold();else if(e.key==="p"||e.key==="P")paused?resume():pause();else if(e.key==="r"||e.key==="R")restart()});
 game.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button!==0)return;swipe={x:e.clientX,y:e.clientY,t:performance.now(),active:true};try{game.setPointerCapture(e.pointerId)}catch{}e.preventDefault()},{passive:false});
 game.addEventListener("pointerup",e=>{if(!swipe.active)return;swipe.active=false;const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y,dt=performance.now()-swipe.t,dist=Math.hypot(dx,dy);if(dist<28&&dt<350)rotate(1);else if(Math.abs(dx)>Math.abs(dy)){if(Math.abs(dx)>28)move(dx>0?1:-1)}else if(dy>35)softDrop();else if(dy<-35)hardDrop();e.preventDefault()},{passive:false});
@@ -177,12 +207,13 @@ window.addEventListener("resize",fitCanvas,{passive:true});if(window.visualViewp
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&running)pause()});
 function setupToggle(id,key){const b=document.getElementById(id);const render=()=>b.classList.toggle("on",!!prefs[key]);b.onclick=()=>{prefs[key]=!prefs[key];savePrefs();render();draw()};render()}
 setupToggle("soundToggle","sound");setupToggle("vibrationToggle","vibration");setupToggle("ghostToggle","ghost");setupToggle("gridToggle","grid");
+fullscreenBtn.onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{}};
 settingsBtn.onclick=()=>{settings.classList.remove("hidden");if(running)pause()};closeSettings.onclick=closeSettings2.onclick=()=>settings.classList.add("hidden");
 document.getElementById("resetBest").onclick=()=>{best=0;saveBest();updateUI();setStatus("BEST SCORE RESET")};
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;installBtn.classList.add("show")});
 installBtn.onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;installBtn.classList.remove("show")};
 window.addEventListener("appinstalled",()=>installBtn.classList.remove("show"));
-resetState();fitCanvas();showMain();updateUI();
+resetState();fitCanvas();showMain();updateUI();setState("READY");
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
 </body></html>
