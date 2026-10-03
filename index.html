@@ -1461,6 +1461,9 @@ let holdPiece = null;
 let canHold = true;
 
 let score = 0;
+let combo = -1;
+let backToBack = false;
+let lastClearScore = 0;
 
 let level = 1;
 
@@ -1643,6 +1646,9 @@ function resetGame() {
 
 
     score = 0;
+    combo = -1;
+    backToBack = false;
+    lastClearScore = 0;
 
     level = 1;
 
@@ -1798,63 +1804,71 @@ function clearLines() {
 
     let cleared = 0;
 
-
     for (
         let y = ROWS - 1;
         y >= 0;
         y--
     ) {
-
-        if (
-            board[y].every(Boolean)
-        ) {
-
-            board.splice(
-                y,
-                1
-            );
-
-
-            board.unshift(
-                Array(COLS).fill(0)
-            );
-
-
+        if (board[y].every(Boolean)) {
+            board.splice(y, 1);
+            board.unshift(Array(COLS).fill(0));
             cleared++;
-
             y++;
         }
     }
 
+    /*
+       SCORING SYSTEM
 
-    if (
-        cleared > 0
-    ) {
+       1 line  = 100 × level
+       2 lines = 300 × level
+       3 lines = 500 × level
+       4 lines = 800 × level
 
-        const points = [
-            0,
-            100,
-            300,
-            500,
-            800
-        ];
+       A 4-line clear (TETRIS) keeps the
+       back-to-back bonus alive.
 
+       Consecutive line-clearing drops build
+       a combo bonus. The combo starts after
+       the second consecutive clear.
+    */
+    if (cleared > 0) {
+        const base = [0, 100, 300, 500, 800][cleared];
 
-        score +=
-            points[cleared] *
-            level;
+        combo++;
 
+        let points = base * level;
 
+        // Back-to-back TETRIS bonus: +50%.
+        if (cleared === 4) {
+            if (backToBack) {
+                points = Math.floor(points * 1.5);
+            }
+            backToBack = true;
+        } else {
+            backToBack = false;
+        }
+
+        // Combo bonus: +50 × combo × level.
+        if (combo > 0) {
+            points += 50 * combo * level;
+        }
+
+        score += points;
+        lastClearScore = points;
         lines += cleared;
 
-
         level =
-            Math.floor(
-                lines / 10
-            ) + 1;
-
+            Math.floor(lines / 10) + 1;
 
         updateUI();
+    } else {
+        /*
+           A piece that clears no lines breaks
+           the combo, but does not affect the score.
+        */
+        combo = -1;
+        lastClearScore = 0;
     }
 }
 
@@ -1953,6 +1967,7 @@ function softDrop() {
 
         current.y++;
 
+        // Soft drop: 1 point per manually dropped cell.
         score += 1;
 
     } else {
@@ -1998,6 +2013,7 @@ function hardDrop() {
     }
 
 
+    // Hard drop: 2 points per cell.
     score +=
         distance * 2;
 
