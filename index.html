@@ -1531,11 +1531,6 @@ let musicObjectUrl = null;
 let musicEnabled = false;
 
 let score = 0;
-let combo = -1;
-let backToBack = false;
-let lastClearScore = 0;
-let lastActionWasRotation = false;
-let lastClearWasTetris = false;
 
 let level = 1;
 
@@ -1725,11 +1720,6 @@ function resetGame() {
 
 
     score = 0;
-    combo = -1;
-    backToBack = false;
-    lastClearScore = 0;
-    lastActionWasRotation = false;
-    lastClearWasTetris = false;
 
     level = 1;
 
@@ -1886,9 +1876,6 @@ function merge() {
    ========================================================= */
 
 function clearLines() {
-    // Detect a T-Spin while the locked piece is still in its
-    // original position. Line removal can change the corners.
-    const isTSpin = isTSpinMove();
     let cleared = 0;
 
     for (let y = ROWS - 1; y >= 0; y--) {
@@ -1901,94 +1888,21 @@ function clearLines() {
     }
 
     if (cleared === 0) {
-        combo = -1;
-        lastClearScore = 0;
-        lastClearWasTetris = false;
-        lastActionWasRotation = false;
         return 0;
     }
 
-    const isTetris = cleared === 4;
+    // Score ONLY for completed lines disappearing.
+    // Nothing else gives score: no drops, combos, T-Spins,
+    // perfect clears, holds, rotations, or movement bonuses.
+    const pointsPerLine = 100;
+    score += cleared * pointsPerLine;
 
-    combo++;
-
-    let points;
-
-    if (isTSpin) {
-        const tSpinBase = [400, 800, 1200, 1600];
-        points = (tSpinBase[cleared] || 400) * level;
-    } else {
-        const lineBase = [0, 100, 300, 500, 800];
-        points = (lineBase[cleared] || 0) * level;
-    }
-
-    // Back-to-back applies to Tetrises and T-Spins.
-    const difficultClear = isTetris || isTSpin;
-    if (difficultClear && lastClearWasTetris) {
-        points = Math.floor(points * 1.5);
-    }
-
-    if (difficultClear) {
-        lastClearWasTetris = true;
-    } else {
-        lastClearWasTetris = false;
-    }
-
-    // Consecutive line clears build a combo.
-    if (combo > 0) {
-        points += 50 * combo * level;
-    }
-
-    score += points;
-    lastClearScore = points;
     lines += cleared;
-
     level = Math.floor(lines / 10) + 1;
-
-    // Perfect clear bonus after the line removal.
-    if (board.every(row => row.every(cell => !cell))) {
-        const perfectClearBonus = 1000 * level;
-        score += perfectClearBonus;
-        lastClearScore += perfectClearBonus;
-    }
-
-    lastActionWasRotation = false;
 
     updateUI();
     return cleared;
 }
-
-function isTSpinMove() {
-    if (!current || !lastActionWasRotation || current.matrix.length !== 3) {
-        return false;
-    }
-
-    // T piece is the only piece with color/index 3.
-    if (!current.matrix.flat().includes(3)) {
-        return false;
-    }
-
-    // Count occupied/out-of-bounds corners around the T pivot.
-    const pivotX = current.x + 1;
-    const pivotY = current.y + 1;
-    const corners = [
-        [pivotX - 1, pivotY - 1],
-        [pivotX + 1, pivotY - 1],
-        [pivotX - 1, pivotY + 1],
-        [pivotX + 1, pivotY + 1]
-    ];
-
-    let occupied = 0;
-
-    for (const [x, y] of corners) {
-        if (x < 0 || x >= COLS || y >= ROWS || (y >= 0 && board[y][x])) {
-            occupied++;
-        }
-    }
-
-    return occupied >= 3;
-}
-
 
 /* =========================================================
    SPAWN NEXT
