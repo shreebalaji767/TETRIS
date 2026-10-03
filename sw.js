@@ -1,4 +1,4 @@
-const CACHE="voidblock-v4";
+const CACHE="voidblock-v5";
 const ASSETS=["./","./index.html","./manifest.json","./icon.svg"];
 
 self.addEventListener("install",event=>{
