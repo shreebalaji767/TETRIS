@@ -646,7 +646,41 @@ button:focus-visible {
 
     #nextCanvas,
     #holdCanvas {
-        display: none;
+        display: block;
+        width: 100%;
+        height: 72px;
+    }
+
+    .left-panel > .panel:nth-child(1) {
+        position: absolute;
+        top: max(76px, calc(env(safe-area-inset-top) + 70px));
+        left: max(6px, env(safe-area-inset-left));
+        z-index: 7;
+        width: 76px;
+        padding: 5px;
+    }
+
+    .right-panel > .panel:nth-child(1) {
+        position: absolute;
+        top: max(76px, calc(env(safe-area-inset-top) + 70px));
+        right: max(6px, env(safe-area-inset-right));
+        z-index: 7;
+        width: 76px;
+        padding: 5px;
+    }
+
+    .right-panel > .panel:nth-child(2) {
+        position: absolute;
+        top: max(154px, calc(env(safe-area-inset-top) + 148px));
+        right: max(6px, env(safe-area-inset-right));
+        z-index: 7;
+        padding: 5px 8px;
+    }
+
+    .left-panel > .panel:nth-child(1) .label,
+    .right-panel > .panel:nth-child(1) .label {
+        font-size: 7px;
+        margin-bottom: 2px;
     }
 
     /*
@@ -887,7 +921,29 @@ button:focus-visible {
 
     .left-panel > .panel,
     .right-panel > .panel {
-        display: none;
+        display: block;
+    }
+
+    .left-panel > .panel:nth-child(1),
+    .right-panel > .panel:nth-child(1) {
+        position: absolute;
+        top: 4px;
+        width: 64px;
+        padding: 3px;
+    }
+
+    .left-panel > .panel:nth-child(1) {
+        left: 4px;
+    }
+
+    .right-panel > .panel:nth-child(1) {
+        right: 4px;
+    }
+
+    .left-panel > .panel:nth-child(1) canvas,
+    .right-panel > .panel:nth-child(1) canvas {
+        display: block;
+        height: 48px;
     }
 
     .game-shell {
@@ -1938,6 +1994,7 @@ function spawnNext() {
 
 
     drawSidePieces();
+    draw();
 
 
     if (
@@ -2967,8 +3024,8 @@ function drawMini(
 
     const size =
         Math.min(
-            rect.width / 5,
-            rect.height / 4
+            rect.width / Math.max(5, matrix[0].length + 2),
+            rect.height / Math.max(4, matrix.length + 1)
         );
 
 
