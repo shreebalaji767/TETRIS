@@ -1867,14 +1867,9 @@ function merge() {
    ========================================================= */
 
 function clearLines() {
-
     let cleared = 0;
 
-    for (
-        let y = ROWS - 1;
-        y >= 0;
-        y--
-    ) {
+    for (let y = ROWS - 1; y >= 0; y--) {
         if (board[y].every(Boolean)) {
             board.splice(y, 1);
             board.unshift(Array(COLS).fill(0));
@@ -1883,59 +1878,46 @@ function clearLines() {
         }
     }
 
-    /*
-       SCORING SYSTEM
-
-       1 line  = 100 × level
-       2 lines = 300 × level
-       3 lines = 500 × level
-       4 lines = 800 × level
-
-       A 4-line clear (TETRIS) keeps the
-       back-to-back bonus alive.
-
-       Consecutive line-clearing drops build
-       a combo bonus. The combo starts after
-       the second consecutive clear.
-    */
-    if (cleared > 0) {
-        const base = [0, 100, 300, 500, 800][cleared];
-
-        combo++;
-
-        let points = base * level;
-
-        // Back-to-back TETRIS bonus: +50%.
-        if (cleared === 4) {
-            if (backToBack) {
-                points = Math.floor(points * 1.5);
-            }
-            backToBack = true;
-        } else {
-            backToBack = false;
-        }
-
-        // Combo bonus: +50 × combo × level.
-        if (combo > 0) {
-            points += 50 * combo * level;
-        }
-
-        score += points;
-        lastClearScore = points;
-        lines += cleared;
-
-        level =
-            Math.floor(lines / 10) + 1;
-
-        updateUI();
-    } else {
-        /*
-           A piece that clears no lines breaks
-           the combo, but does not affect the score.
-        */
+    if (cleared === 0) {
         combo = -1;
         lastClearScore = 0;
+        return 0;
     }
+
+    /*
+      VOIDBLOCK SCORING
+      Base clear: 1=100, 2=300, 3=500, 4=800.
+      Values are multiplied by the level at the moment
+      the lines are cleared.
+
+      Combo: +50 × combo × level.
+      Back-to-back TETRIS: +50% on consecutive 4-line clears.
+    */
+    const base = [0, 100, 300, 500, 800][cleared] || 0;
+    combo++;
+
+    let points = base * level;
+
+    if (cleared === 4) {
+        if (backToBack) points = Math.floor(points * 1.5);
+        backToBack = true;
+    } else {
+        backToBack = false;
+    }
+
+    if (combo > 0) {
+        points += 50 * combo * level;
+    }
+
+    score += points;
+    lastClearScore = points;
+    lines += cleared;
+
+    // Level advances every 10 cleared lines, including 10, 20, 30...
+    level = Math.floor(lines / 10) + 1;
+
+    updateUI();
+    return cleared;
 }
 
 
