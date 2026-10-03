@@ -1161,12 +1161,26 @@ body.void-light .upgrade-hud .best{background:#f3f5f8;border-color:#cbd2dc;color
                     </button>
 
 
-                    <!-- ROTATE BUTTON -->
+                    <!-- ROTATE COUNTER-CLOCKWISE -->
+
+                    <button
+                        class="control rotate"
+                        id="rotateCCWBtn"
+                        aria-label="Rotate block counter-clockwise"
+                        title="Rotate counter-clockwise">
+
+                        ↺
+
+                    </button>
+
+
+                    <!-- ROTATE CLOCKWISE -->
 
                     <button
                         class="control rotate"
                         id="rotateBtn"
-                        aria-label="Rotate block">
+                        aria-label="Rotate block clockwise"
+                        title="Rotate clockwise">
 
                         ↻
 
@@ -1295,6 +1309,7 @@ body.void-light .upgrade-hud .best{background:#f3f5f8;border-color:#cbd2dc;color
    LEFT ARROW  = MOVE LEFT
    RIGHT ARROW = MOVE RIGHT
    DOWN ARROW  = SOFT DROP
+   UP ARROW    = ROTATE CLOCKWISE
 
    X = ROTATE CLOCKWISE
    Z = ROTATE COUNTER-CLOCKWISE
@@ -1319,7 +1334,8 @@ body.void-light .upgrade-hud .best{background:#f3f5f8;border-color:#cbd2dc;color
    SWIPE DOWN  = SOFT DROP
    SWIPE UP    = HARD DROP
 
-   ON-SCREEN ↻ BUTTON = ROTATE
+   ON-SCREEN ↺ BUTTON = ROTATE COUNTER-CLOCKWISE
+   ON-SCREEN ↻ BUTTON = ROTATE CLOCKWISE
 
 
    NO DATABASE
@@ -3703,6 +3719,19 @@ rotateBtn.addEventListener(
 );
 
 
+/* ROTATE COUNTER-CLOCKWISE */
+
+rotateCCWBtn.addEventListener(
+    "click",
+    event => {
+
+        event.preventDefault();
+
+        rotateCounterClockwise();
+    }
+);
+
+
 /* HARD DROP */
 
 dropBtn.addEventListener(
@@ -3751,8 +3780,7 @@ document.addEventListener(
         /*
            Prevent browser scrolling.
 
-           ArrowUp is intentionally NOT included
-           because it has no game action.
+           ArrowUp is included for clockwise rotation.
         */
 
         if (
@@ -3771,6 +3799,17 @@ document.addEventListener(
         switch (
             event.key
         ) {
+
+
+            /* ROTATE CLOCKWISE */
+
+            case "ArrowUp":
+
+                event.preventDefault();
+
+                rotate();
+
+                break;
 
 
             /* LEFT */
