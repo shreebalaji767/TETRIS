@@ -231,6 +231,7 @@ game.addEventListener("contextmenu",e=>e.preventDefault());
 window.addEventListener("resize",fitCanvas,{passive:true});
 window.addEventListener("orientationchange",()=>setTimeout(fitCanvas,120),{passive:true});if(window.visualViewport)visualViewport.addEventListener("resize",fitCanvas,{passive:true});
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&running)pause()});
+window.addEventListener("blur",()=>{if(running)pause()});
 window.addEventListener("offline",()=>setStatus("OFFLINE • GAME STILL WORKS"));
 window.addEventListener("online",()=>setStatus("ONLINE"));
 function setupToggle(id,key){const b=document.getElementById(id);const render=()=>b.classList.toggle("on",!!prefs[key]);b.onclick=()=>{prefs[key]=!prefs[key];savePrefs();render();draw()};render()}
