@@ -163,7 +163,8 @@ const overlay=document.getElementById("overlay"),overlayTitle=document.getElemen
 const settings=document.getElementById("settings"),fullscreenBtn=document.getElementById("fullscreenBtn"),settingsBtn=document.getElementById("settingsBtn"),closeSettings=document.getElementById("closeSettings"),closeSettings2=document.getElementById("closeSettings2"),installBtn=document.getElementById("installBtn"),installHelp=document.getElementById("installHelp"),installHelpText=document.getElementById("installHelpText"),closeInstallHelp=document.getElementById("closeInstallHelp"),closeInstallHelp2=document.getElementById("closeInstallHelp2");
 const buttons={left:document.getElementById("left"),right:document.getElementById("right"),rotate:document.getElementById("rotate"),rotateCCW:document.getElementById("rotateCCW"),rotate180:document.getElementById("rotate180"),hold:document.getElementById("holdBtn"),softDrop:document.getElementById("softDrop"),pause:document.getElementById("pause"),drop:document.getElementById("drop")};
 let board=[],bag=[],queue=[],current=null,held=null,canHold=true,running=false,paused=false,gameOver=false;
-let score=0,lines=0,level=1,best=loadBest(),raf=0,lastTime=0,fallTimer=0,lockTimer=0,cell=20;\nlet flashUntil=0,flashLines=0,perfectClear=false;
+let score=0,lines=0,level=1,best=loadBest(),raf=0,lastTime=0,fallTimer=0,lockTimer=0,cell=20;
+let flashUntil=0,flashLines=0,perfectClear=false;
 let swipe={x:0,y:0,t:0,active:false},audio=null,deferredInstall=null;
 let prefs=loadPrefs();
 function loadBest(){try{return Number(localStorage.getItem("voidblock-best")||0)}catch{return 0}}
@@ -179,11 +180,11 @@ function refillBag(){bag.push(...shuffled())} function takeType(){if(!bag.length
 function makePiece(type){const m=clone(SHAPES[type]);return{type,matrix:m,x:Math.floor((COLS-m[0].length)/2),y:0,rotation:0}}
 function spawn(){fillQueue();current=makePiece(queue.shift());fillQueue();canHold=true;lockTimer=0;if(collides(current,current.x,current.y)){gameOver=true;running=false;showGameOver();cancelAnimationFrame(raf)}drawPreviews()}
 function resetState(){board=newBoard();bag=[];queue=[];held=null;canHold=true;score=0;lines=0;level=1;running=false;paused=false;gameOver=false;fallTimer=0;lockTimer=0;current=null;flashUntil=0;flashLines=0;perfectClear=false;fillQueue();spawn();updateUI()}
-function start(){resetState();running=true;setState("PLAYING");buttons.pause.innerHTML="Ⅱ<span class=\"control-label\">PAUSE</span>";hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop);tone(220,.08,"sine",.02);buzz(8)}
+function start(){resetState();running=true;setState("PLAYING");buttons.pause.innerHTML="Ⅱ<span class=\"control-label\">PAUSE</span>";buttons.pause.dataset.paused="0";hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop);tone(220,.08,"sine",.02);buzz(8)}
 function restart(){start()}
 function pause(){if(!running)return;paused=true;running=false;setState("PAUSED");buttons.pause.innerHTML="▶<span class=\"control-label\">RESUME</span>";cancelAnimationFrame(raf);showPause()}
-function resume(){if(gameOver)return;paused=false;running=true;setState("PLAYING");buttons.pause.innerHTML="Ⅱ<span class=\"control-label\">PAUSE</span>";hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop)}
-function exitGame(){running=false;paused=false;gameOver=false;cancelAnimationFrame(raf);buttons.pause.innerHTML="Ⅱ<span class=\"control-label\">PAUSE</span>";resetState();setState("READY");showMain()}
+function resume(){if(gameOver)return;paused=false;running=true;setState("PLAYING");buttons.pause.innerHTML="Ⅱ<span class=\"control-label\">PAUSE</span>";buttons.pause.dataset.paused="0";hideOverlay();lastTime=performance.now();raf=requestAnimationFrame(loop)}
+function exitGame(){running=false;paused=false;gameOver=false;cancelAnimationFrame(raf);buttons.pause.innerHTML="Ⅱ<span class=\"control-label\">PAUSE</span>";buttons.pause.dataset.paused="0";resetState();setState("READY");showMain()}
 function loop(t){if(!running||paused)return;const dt=Math.min(100,t-lastTime);lastTime=t;const speed=Math.max(70,850-(level-1)*65);fallTimer+=dt;if(current&&collides(current,current.x,current.y+1)){lock();fallTimer=0;lockTimer=0}else if(fallTimer>=speed){fallTimer=0;stepDown(0)}draw();raf=requestAnimationFrame(loop)}
 function collides(p,x=p.x,y=p.y,m=p.matrix){for(let r=0;r<m.length;r++)for(let c=0;c<m[r].length;c++)if(m[r][c]){const bx=x+c,by=y+r;if(bx<0||bx>=COLS||by>=ROWS+HIDDEN)return true;if(by>=0&&board[by][bx])return true}return false}
 function merge(){for(let r=0;r<current.matrix.length;r++)for(let c=0;c<current.matrix[r].length;c++)if(current.matrix[r][c]){const y=current.y+r,x=current.x+c;if(y>=0)board[y][x]=current.type}}
