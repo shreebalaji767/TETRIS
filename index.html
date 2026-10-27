@@ -268,6 +268,77 @@ canvas#game{border-radius:13px}
 }
 @media(prefers-reduced-motion:reduce){.landing-feature,.mode-record{transition:none!important}}
 
+
+/* Clean UI pass: quieter surfaces, consistent spacing, clearer hierarchy */
+:root{--line:#202d3e;--line2:#354960;--panel:#0b121d;--panel2:#111b29}
+button{box-shadow:none;transition:background-color .14s ease,border-color .14s ease,transform .14s ease}
+button:hover{transform:translateY(-1px);box-shadow:none}
+.panel{backdrop-filter:none;background:#0b121def;border:1px solid #1d2a3a;border-radius:13px;box-shadow:none;padding:12px}
+.board-frame{animation:none;border-color:#1b2b3e;border-radius:16px;background:#080d15;box-shadow:none;padding:4px}
+canvas#game{border-color:#29394d;border-radius:12px;box-shadow:none}
+.brand{text-shadow:none;letter-spacing:3px}
+.brand-mark{filter:none}
+.brand-word span{text-shadow:none}
+.topbar{gap:6px}
+.topbar button{border-radius:9px;box-shadow:none;background:#101a28;border-color:#293a50}
+.topbar .install{background:#b7f5fb;color:#07131b;border-color:#b7f5fb}
+.mode-picker select{border-radius:8px}
+.status-pill{background:#0c1521;border-color:#26384d}
+.stats-strip{letter-spacing:.7px}
+.controls{box-shadow:none;backdrop-filter:none;background:#080e17;border-color:#1d2a3b}
+.controls::before,.controls::after{display:none}
+.controls button,.controls .move,.controls .rotate,.controls .pause-control{box-shadow:none;background:#111c2b;border-color:#2d4259}
+.controls .drop{background:#dce7ef;color:#09131d;border-color:#dce7ef}
+.landing{background:radial-gradient(ellipse at 50% 0%,#122033 0%,#080d17 48%,#05070c 100%)}
+.landing-title span{text-shadow:none}
+.landing-logo,.landing-title{text-shadow:none}
+.landing-logo img{filter:none}
+.landing-feature{box-shadow:none;backdrop-filter:none}
+.landing-float{box-shadow:none;backdrop-filter:blur(8px)}
+.landing-play{box-shadow:none}
+@media(max-width:800px){
+ .shell{gap:7px}
+ .kicker{display:none}
+ .topbar{position:relative;top:auto;right:auto;left:auto;flex-wrap:wrap;justify-content:center;margin:31px auto 5px;max-width:100%;z-index:6}
+ .topbar button{min-height:29px;padding:0 9px;font-size:9px}
+ .left .panel,.right .panel{position:absolute;top:67px!important;width:auto!important;max-width:86px;padding:5px 7px;border-radius:9px;background:#0a111c;border-color:#1b2a3a}
+ .left .panel:nth-child(2),.left .panel:nth-child(4),.left .panel:nth-child(5),.left .panel:nth-child(6),.right .panel:nth-child(2),.right .panel:nth-child(3){display:none}
+ .left .panel:nth-child(3){left:5px;right:auto;top:68px!important;width:72px!important}
+ .right .panel:nth-child(1){right:5px;left:auto;top:68px!important;width:72px!important}
+ .left .panel:nth-child(3) .value{font-size:15px}
+ .right .panel:nth-child(1) .next-item{height:23px}
+ .right .panel:nth-child(1) .panel-title{margin-bottom:0}
+ .board-wrap{margin-top:4px;width:min(88vw,calc((100dvh - 192px)/2),390px);max-height:calc(100dvh - 192px)}
+ .controls{margin-top:7px}
+ .stats-strip{gap:8px;font-size:8px;margin:4px 0}
+ .mode-picker{margin:3px 0 5px}
+ .mode-hint{margin:0 0 4px}
+ .status{min-height:12px}
+}
+@media(max-width:390px){
+ .topbar{margin-top:29px;gap:4px}
+ .topbar button{padding:0 6px;font-size:8px}
+ .left .panel:nth-child(3),.right .panel:nth-child(1){top:63px!important}
+ .board-wrap{width:min(86vw,calc((100dvh - 190px)/2));max-height:calc(100dvh - 190px)}
+ .controls{width:min(96vw,430px)}
+}
+@media(max-height:700px) and (max-width:800px){
+ .topbar{margin-top:28px;margin-bottom:2px}
+ .board-wrap{width:min(82vw,calc((100dvh - 165px)/2),340px);max-height:calc(100dvh - 165px)}
+ .controls{margin-top:4px;padding:5px}
+ .controls button{min-height:39px}
+ .controls .move{min-height:43px}
+ .hint{display:none}
+}
+@media(max-height:600px) and (orientation:landscape) and (max-width:800px){
+ .left .panel:nth-child(3),.right .panel:nth-child(1){display:none}
+ .shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(175px,38vh) minmax(0,1fr);gap:7px}
+ .center{grid-column:2;grid-row:1}
+ .topbar{position:static;margin:0 auto 3px}
+ .board-wrap{width:min(35vh,calc((100dvh - 115px)/2),230px);max-height:calc(100dvh - 115px);margin-top:0}
+ .controls{position:absolute;right:4px;bottom:4px;width:clamp(145px,25vw,190px);grid-template-columns:repeat(2,minmax(0,1fr));margin:0}
+}
+@media(prefers-reduced-motion:reduce){.board-frame{animation:none}}
 </style>
 </head>
 <body>
