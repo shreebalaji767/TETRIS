@@ -96,10 +96,91 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
  .topbar{position:absolute;left:5px;top:5px;z-index:8}.controls{position:absolute;right:4px;bottom:4px;width:180px;grid-template-columns:repeat(2,1fr);margin:0;gap:5px}.controls .drop{grid-column:span 2}.controls button{min-height:38px;font-size:14px}.controls .move{min-height:44px;font-size:19px}.hint{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* Landing page */
+#app.app-hidden{display:none}
+.landing{position:fixed;inset:0;z-index:100;overflow-y:auto;overflow-x:hidden;background:radial-gradient(ellipse at 50% 0%,#162844 0%,#080d17 43%,#03050a 100%);padding:max(20px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}
+.landing-inner{width:min(1120px,100%);min-height:100%;margin:auto;display:flex;flex-direction:column}
+.landing-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:5px 0 24px}
+.landing-logo{display:flex;align-items:center;gap:11px;font-size:21px;letter-spacing:4px;font-weight:950;text-shadow:0 0 28px #67e8f944}
+.landing-logo img{width:42px;height:42px;filter:drop-shadow(0 0 12px #67e8f955)}
+.landing-logo small{display:block;font-size:8px;letter-spacing:3px;color:#8da0b8;margin-top:4px}
+.landing-nav-tag{border:1px solid #2b405b;background:#0b1421b8;color:#9cb0c9;border-radius:999px;padding:8px 12px;font-size:9px;letter-spacing:1.5px}
+.landing-hero{flex:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr);align-items:center;gap:clamp(25px,6vw,76px);padding:clamp(12px,4vh,48px) 0}
+.landing-eyebrow{display:flex;align-items:center;gap:9px;color:#67e8f9;font-size:10px;font-weight:900;letter-spacing:3px;margin-bottom:20px}
+.landing-eyebrow:before{content:"";width:24px;height:2px;background:#67e8f9;box-shadow:0 0 12px #67e8f9}
+.landing-title{font-size:clamp(52px,8vw,100px);font-weight:1000;line-height:.88;letter-spacing:-.065em;margin:0 0 22px}
+.landing-title span{display:block;color:transparent;-webkit-text-stroke:1.5px #67e8f9;text-shadow:0 0 32px #67e8f91a}
+.landing-copy{max-width:470px;color:#9aabc0;font-size:clamp(13px,1.6vw,16px);line-height:1.8}
+.landing-cta{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:28px}
+.landing-play{min-height:54px;padding:0 25px;border:0;border-radius:13px;background:linear-gradient(115deg,#9bf4ff,#5bdcf3 48%,#a8b8ff);color:#06111c;font-size:12px;font-weight:1000;letter-spacing:1.5px;box-shadow:0 10px 35px #42dff52b}
+.landing-play:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.landing-select-wrap{display:flex;flex-direction:column;gap:6px;color:#7f91a8;font-size:9px;font-weight:900;letter-spacing:1.5px}
+.landing-select{min-height:42px;min-width:170px;border:1px solid #30445f;border-radius:11px;background:#0b1421;color:#edf8ff;padding:0 12px;font:800 11px system-ui}
+.landing-footnote{color:#61738b;font-size:10px;margin-top:15px}
+.landing-art{position:relative;min-height:350px;display:flex;align-items:center;justify-content:center;isolation:isolate}
+.landing-art:before{content:"";position:absolute;width:min(30vw,340px);aspect-ratio:1;border-radius:50%;background:#28cde91b;filter:blur(55px);z-index:-1}
+.landing-board{width:min(100%,310px);aspect-ratio:10/12;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(12,1fr);gap:5px;padding:13px;border:1px solid #304660;border-radius:22px;background:linear-gradient(145deg,#111e30eF,#080d16f5);box-shadow:0 30px 90px #000b,0 0 45px #48dff415,inset 0 1px #ffffff12;transform:perspective(900px) rotateY(-9deg) rotateX(3deg)}
+.landing-cell{border-radius:5px;background:#152234;border:1px solid #26374c;box-shadow:inset 0 1px #ffffff05}
+.landing-cell.cyan{background:linear-gradient(145deg,#8bf2ff,#16b9e5);border-color:#9bf5ff;box-shadow:0 0 16px #26c9f54a,inset 0 2px #ffffff88}
+.landing-cell.violet{background:linear-gradient(145deg,#d5b1ff,#8751e9);border-color:#e0c7ff;box-shadow:0 0 16px #a56cff45,inset 0 2px #ffffff77}
+.landing-cell.blue{background:linear-gradient(145deg,#8aa9ff,#4167e9);border-color:#adc3ff;box-shadow:0 0 16px #587bff45,inset 0 2px #ffffff77}
+.landing-cell.green{background:linear-gradient(145deg,#a3ffce,#21c987);border-color:#bcffdc;box-shadow:0 0 16px #35e5a545,inset 0 2px #ffffff77}
+.landing-float{position:absolute;border:1px solid #344c68;background:#0a1422eF;box-shadow:0 18px 45px #0008;border-radius:13px;padding:12px 15px;backdrop-filter:blur(12px)}
+.landing-float strong{display:block;font-size:18px;color:#f6fbff;letter-spacing:-.5px}
+.landing-float span{display:block;color:#8da2bd;font-size:8px;letter-spacing:1.6px;margin-top:4px}
+.landing-float.score{top:9%;right:-1%}.landing-float.mode{bottom:10%;left:-2%}
+.landing-features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 0 25px}
+.landing-feature{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px solid #1e3047;border-radius:15px;background:linear-gradient(145deg,#0d1725c9,#080d16bd)}
+.landing-feature-icon{width:35px;height:35px;flex:none;display:grid;place-items:center;border:1px solid #29415c;border-radius:10px;color:#67e8f9;background:#0d1a2a;font-size:17px}
+.landing-feature b{display:block;font-size:11px;letter-spacing:.5px;margin:2px 0 5px}.landing-feature p{color:#8496ad;font-size:10px;line-height:1.6}
+.landing-bottom{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid #1c2b40;padding:15px 0 2px;color:#62758d;font-size:9px;letter-spacing:1px}
+.landing-bottom b{color:#8da2bc}
+.landing-hidden{display:none!important}
+@media(max-width:720px){.landing-nav{padding-bottom:8px}.landing-hero{grid-template-columns:1fr;gap:15px;padding:30px 0 25px}.landing-title{font-size:clamp(58px,15vw,88px)}.landing-copy{max-width:560px}.landing-art{min-height:255px;grid-row:1}.landing-board{width:min(62%,245px);gap:3px;padding:9px;border-radius:16px}.landing-float.score{right:4%;top:8%}.landing-float.mode{left:2%;bottom:6%}.landing-features{grid-template-columns:1fr;gap:8px}.landing-feature{padding:12px}.landing-feature p{font-size:11px}.landing-bottom{font-size:8px}}
+@media(max-width:380px){.landing-nav-tag{display:none}.landing-hero{padding-top:15px}.landing-art{min-height:220px}.landing-board{width:64%}.landing-title{font-size:55px}.landing-cta{align-items:stretch}.landing-play{flex:1}.landing-select{width:100%}}
+@media(prefers-reduced-motion:no-preference){.landing-board{animation:boardFloat 6s ease-in-out infinite}@keyframes boardFloat{0%,100%{transform:perspective(900px) rotateY(-9deg) rotateX(3deg) translateY(0)}50%{transform:perspective(900px) rotateY(-6deg) rotateX(1deg) translateY(-7px)}}}
 </style>
 </head>
 <body>
-<div id="app"><main class="shell">
+<section id="landing" class="landing" aria-label="VOIDBLOCK game landing page">
+  <div class="landing-inner">
+    <header class="landing-nav">
+      <div class="landing-logo"><img src="./icon.svg" alt=""><div>VOIDBLOCK<small>NEON BLOCK SYSTEM</small></div></div>
+      <div class="landing-nav-tag">FREE TO PLAY · WORKS OFFLINE</div>
+    </header>
+    <main class="landing-hero">
+      <div class="landing-copy-block">
+        <div class="landing-eyebrow">THE CLASSIC, REWIRED</div>
+        <h1 class="landing-title">STACK.<span>THINK.</span>DOMINATE.</h1>
+        <p class="landing-copy">Drop into a neon-lit block puzzle built for quick reflexes and clever clears. Chain combos, chase your high score, and find your flow — on desktop or mobile.</p>
+        <div class="landing-cta">
+          <button id="landingPlay" class="landing-play">▶ &nbsp; PLAY NOW</button>
+          <label class="landing-select-wrap">CHOOSE YOUR MODE
+            <select id="landingMode" class="landing-select">
+              <option value="marathon">Marathon · Endless</option>
+              <option value="sprint">Sprint · 40 Lines</option>
+              <option value="ultra">Ultra · 120 Seconds</option>
+              <option value="zen">Zen · Relaxed</option>
+            </select>
+          </label>
+        </div>
+        <p class="landing-footnote">NO DOWNLOAD REQUIRED · YOUR RECORDS STAY ON THIS DEVICE</p>
+      </div>
+      <div class="landing-art" aria-hidden="true">
+        <div id="landingBoard" class="landing-board"></div>
+        <div class="landing-float score"><strong>∞</strong><span>CHASE YOUR BEST</span></div>
+        <div class="landing-float mode"><strong>4 MODES</strong><span>YOUR PACE. YOUR RULES.</span></div>
+      </div>
+    </main>
+    <section class="landing-features" aria-label="Game features">
+      <article class="landing-feature"><div class="landing-feature-icon">⌘</div><div><b>BUILT FOR COMBOS</b><p>Clear multiple rows, build streaks and push for a new personal best.</p></div></article>
+      <article class="landing-feature"><div class="landing-feature-icon">◈</div><div><b>PLAY YOUR WAY</b><p>Pick Marathon, Sprint, timed Ultra or a relaxed Zen session.</p></div></article>
+      <article class="landing-feature"><div class="landing-feature-icon">↗</div><div><b>DESKTOP + MOBILE</b><p>Keyboard and touch controls, with offline play after the game loads.</p></div></article>
+    </section>
+    <footer class="landing-bottom"><span>© VOIDBLOCK <b>· NEON BLOCK SYSTEM</b></span><span>← → MOVE &nbsp; · &nbsp; ↑ ROTATE &nbsp; · &nbsp; SPACE DROP</span></footer>
+  </div>
+</section>
+<div id="app" class="app-hidden"><main class="shell">
 <section class="side left">
 <div class="brand" aria-label="VOIDBLOCK Tetris"><img class="brand-mark" src="./icon.svg" alt="" width="38" height="38"><div class="brand-word">VOIDBLOCK<span>NEON BLOCK SYSTEM</span></div></div>
 <div class="panel"><div class="label">HOLD</div><canvas id="hold" class="preview" width="160" height="86"></canvas></div>
@@ -269,6 +350,18 @@ installBtn.onclick=async()=>{
 window.addEventListener("appinstalled",()=>{deferredInstall=null;updateInstallButton();setStatus("APP INSTALLED")});
 updateInstallButton();
 mode=modeSelect.value;modeSelect.addEventListener("change",()=>{mode=modeSelect.value});
+const landing=document.getElementById("landing"),app=document.getElementById("app"),landingMode=document.getElementById("landingMode"),landingPlay=document.getElementById("landingPlay"),landingBoard=document.getElementById("landingBoard");
+const landingBlocks=[
+ [0,7,"cyan"],[1,7,"cyan"],[2,7,"cyan"],[3,7,"cyan"],
+ [3,8,"violet"],[4,8,"violet"],[5,8,"violet"],[6,8,"violet"],
+ [1,9,"blue"],[2,9,"blue"],[3,9,"blue"],[3,10,"blue"],
+ [6,5,"green"],[7,5,"green"],[6,6,"green"],[7,6,"green"],
+ [7,3,"violet"],[8,3,"violet"],[9,3,"violet"],[9,4,"violet"],
+ [0,10,"cyan"],[1,10,"cyan"],[2,10,"cyan"],[3,10,"cyan"]
+];
+for(let i=0;i<120;i++){const cellEl=document.createElement("span");cellEl.className="landing-cell";const x=i%10,y=Math.floor(i/10);const match=landingBlocks.find(([bx,by])=>bx===x&&by===y);if(match)cellEl.classList.add(match[2]);landingBoard.appendChild(cellEl)}
+landingPlay.addEventListener("click",()=>{modeSelect.value=landingMode.value;mode=landingMode.value;landing.classList.add("landing-hidden");app.classList.remove("app-hidden");fitCanvas();start();window.scrollTo(0,0)});
+
 resetState();fitCanvas();showMain();updateUI();setState("READY");
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
