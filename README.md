@@ -69,6 +69,12 @@ The in-game HUD shows combo, elapsed/remaining time, and pieces locked. Mode sel
 
 ## ✨ Game Features
 
+### Latest Gameplay Upgrade
+
+- Improved wall rotations using SRS-style kick tables, including dedicated I-piece offsets.
+- Added T-spin mini versus full classification, kick-aware promotion, and separate mini-spin scoring.
+- Existing ghost piece, hold, combos, back-to-back clears, hard-drop points, and line-clear effects remain supported.
+
 - Classic **10 × 20 Tetris** board
 - Hidden spawn rows for smoother piece entry
 - Seven-piece bag randomizer
@@ -77,6 +83,8 @@ The in-game HUD shows combo, elapsed/remaining time, and pieces locked. Mode sel
 - Ghost piece / landing preview
 - Clockwise and counter-clockwise rotation
 - **180° rotation**
+- Standard-style Super Rotation System (SRS) wall kicks for I and other tetrominoes
+- T-spin mini/full detection with distinct scoring and feedback
 - Wall-kick rotation handling
 - Automatic piece spawning after a block locks
 - Line clearing
