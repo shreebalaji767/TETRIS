@@ -365,7 +365,7 @@ let startAfterRoute=false;
 function showGameScreen(autoStart=false){landing.classList.add("landing-hidden");app.classList.remove("app-hidden");fitCanvas();if(autoStart){modeSelect.value=landingMode.value;mode=landingMode.value;start()}else{showMain();updateUI();setState("READY")}window.scrollTo(0,0)}
 function showLandingScreen(){if(running||paused)exitGame();landing.classList.remove("landing-hidden");app.classList.add("app-hidden");}
 landingPlay.addEventListener("click",()=>{startAfterRoute=true;location.hash="play";if(location.hash==="#play"&&app.classList.contains("app-hidden")){showGameScreen(startAfterRoute);startAfterRoute=false}});
-window.addEventListener("hashchange",()=>{if(location.hash==="#play"){showGameScreen(startAfterRoute);startAfterRoute=false}else{startAfterRoute=false;showLandingScreen()}});
+window.addEventListener("hashchange",()=>{if(location.hash==="#play"){if(app.classList.contains("app-hidden")){showGameScreen(startAfterRoute);startAfterRoute=false}}else{startAfterRoute=false;showLandingScreen()}});
 if(location.hash==="#play"){showGameScreen(false)}else{showLandingScreen()}
 
 resetState();fitCanvas();showMain();updateUI();setState("READY");
