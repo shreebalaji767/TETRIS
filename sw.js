@@ -1,4 +1,4 @@
-const CACHE_NAME = "voidblock-v28";
+const CACHE_NAME = "voidblock-v29";
 const CORE = ["./","./index.html","./manifest.json","./favicon.svg","./icon.svg"];
 
 self.addEventListener("install", event => {
