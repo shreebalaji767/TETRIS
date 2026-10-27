@@ -64,10 +64,19 @@ Choose a mode before starting:
 - **Sprint 40** — finish by clearing 40 lines.
 - **Ultra 120** — score as much as possible in two minutes.
 - **Zen** — relaxed play without automatic piece falling; use soft drop when ready.
+- **Daily Challenge** — clear 20 lines using a daily seeded piece sequence.
 
 The in-game HUD shows combo, elapsed/remaining time, and pieces locked. Mode selection is locked while a round is active.
 
 ## ✨ Game Features
+
+### Latest Upgrade — Daily Challenge, Achievements and Themes
+
+- Added a daily 20-line challenge with a date-seeded seven-piece bag sequence, so everyone receives the same daily piece order.
+- Added six locally saved achievements for starting play, reaching 10,000 points, clearing 10 lines, making a Tetris, achieving a perfect clear, and completing a daily challenge.
+- Added Neon, Cyber, and Monochrome tetromino palettes in Settings; the selected palette is saved on the device.
+- Added the daily challenge to both the landing-page and in-game mode selectors.
+
 
 ### Latest Gameplay Upgrade
 
