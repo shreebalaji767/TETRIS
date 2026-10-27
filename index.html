@@ -119,6 +119,16 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 .landing-select-wrap{display:flex;flex-direction:column;gap:6px;color:#7f91a8;font-size:9px;font-weight:900;letter-spacing:1.5px}
 .landing-select{min-height:42px;min-width:170px;border:1px solid #30445f;border-radius:11px;background:#0b1421;color:#edf8ff;padding:0 12px;font:800 11px system-ui}
 .landing-footnote{color:#61738b;font-size:10px;margin-top:15px}
+.mode-records{width:min(100%,520px);margin:16px 0 0;padding:13px 15px;border:1px solid #263b52;border-radius:14px;background:linear-gradient(135deg,#101b2bdf,#09111de8);text-align:left}
+.mode-records-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.mode-records-head strong{font-size:10px;letter-spacing:1.8px;color:#a6bed7}
+.mode-records-head span{font-size:9px;color:#627c97}
+.mode-record-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.mode-record{min-width:0;padding:9px 6px;border:1px solid #22354b;border-radius:9px;background:#0b1421;text-align:center}
+.mode-record b{display:block;color:#effaff;font-size:clamp(12px,2vw,17px);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis}
+.mode-record span{display:block;margin-top:4px;color:#8299b2;font-size:8px;letter-spacing:.5px;text-transform:uppercase}
+@media(max-width:520px){.mode-record-list{grid-template-columns:repeat(3,minmax(0,1fr))}.mode-records{padding:10px}}
+
 .landing-art{position:relative;min-height:350px;display:flex;align-items:center;justify-content:center;isolation:isolate}
 .landing-art:before{content:"";position:absolute;width:min(30vw,340px);aspect-ratio:1;border-radius:50%;background:#28cde91b;filter:blur(55px);z-index:-1}
 .landing-board{width:min(100%,310px);aspect-ratio:10/12;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(12,1fr);gap:5px;padding:13px;border:1px solid #304660;border-radius:22px;background:linear-gradient(145deg,#111e30eF,#080d16f5);box-shadow:0 30px 90px #000b,0 0 45px #48dff415,inset 0 1px #ffffff12;transform:perspective(900px) rotateY(-9deg) rotateX(3deg)}
@@ -168,6 +178,10 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
             </select>
           </label>
         </div>
+        <section class="mode-records" aria-label="Personal best scores">
+          <div class="mode-records-head"><strong>YOUR PERSONAL BESTS</strong><span>THIS DEVICE ONLY</span></div>
+          <div id="modeRecordList" class="mode-record-list" aria-live="polite"></div>
+        </section>
         <p class="landing-footnote">NO DOWNLOAD REQUIRED · YOUR RECORDS STAY ON THIS DEVICE</p>
       </div>
       <div class="landing-art" aria-hidden="true">
@@ -300,7 +314,10 @@ function tone(freq,dur=.06,type="square",gain=.025){if(!prefs.sound)return;try{a
 function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=0}}
 function startMusic(){if(!prefs.music)return;stopMusic();try{audio=audio||(window.AudioContext||window.webkitAudioContext)&&new (window.AudioContext||window.webkitAudioContext)();if(!audio)return;if(audio.state==="suspended")audio.resume();const notes=[130.81,164.81,196,261.63,196,164.81,146.83,220];const playNote=()=>{if(!prefs.music||!audio)return;const osc=audio.createOscillator(),gain=audio.createGain();osc.type="triangle";osc.frequency.value=notes[musicStep++%notes.length];gain.gain.setValueAtTime(.0001,audio.currentTime);gain.gain.exponentialRampToValueAtTime(.012,audio.currentTime+.035);gain.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.24);osc.connect(gain);gain.connect(audio.destination);osc.start();osc.stop(audio.currentTime+.25)};playNote();musicTimer=setInterval(playNote,300)}catch{stopMusic()}}
 function rankForLines(total){return total>=1000?"GRANDMASTER":total>=600?"MASTER":total>=300?"EXPERT":total>=150?"SKILLED":total>=50?"NOVICE":total>=10?"APPRENTICE":"ROOKIE"}
-function recordRun(){if(runRecorded)return;runRecorded=true;stats.completedGames=(stats.completedGames||0)+1;stats.totalScore=(stats.totalScore||0)+score;stats.totalPlayMs=(stats.totalPlayMs||0)+elapsed;stats.bestRun=Math.max(stats.bestRun||0,score);saveStats();unlockAchievements();updateUI()}
+function loadModeBests(){try{return Object.assign({marathon:0,sprint:0,ultra:0,zen:0,daily:0},JSON.parse(localStorage.getItem("voidblock-mode-bests")||"{}"))}catch{return{marathon:0,sprint:0,ultra:0,zen:0,daily:0}}}
+let modeBests=loadModeBests();
+function renderModeBests(){const el=document.getElementById("modeRecordList");if(!el)return;const labels={marathon:"MARATHON",sprint:"SPRINT",ultra:"ULTRA",zen:"ZEN",daily:"DAILY"};el.innerHTML=Object.keys(labels).map(key=>'<div class="mode-record"><b>'+Number(modeBests[key]||0).toLocaleString()+'</b><span>'+labels[key]+'</span></div>').join("")}
+function recordRun(){if(runRecorded)return;runRecorded=true;stats.completedGames=(stats.completedGames||0)+1;stats.totalScore=(stats.totalScore||0)+score;stats.totalPlayMs=(stats.totalPlayMs||0)+elapsed;stats.bestRun=Math.max(stats.bestRun||0,score);modeBests[mode]=Math.max(Number(modeBests[mode]||0),score);try{localStorage.setItem("voidblock-mode-bests",JSON.stringify(modeBests))}catch{}renderModeBests();saveStats();unlockAchievements();updateUI()}
 function newBoard(){return Array.from({length:ROWS+HIDDEN},()=>Array(COLS).fill(null))}
 function clone(m){return m.map(r=>r.slice())}
 function shuffled(){const a=TYPES.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(gameRandom()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
