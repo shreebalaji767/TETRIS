@@ -45,6 +45,17 @@ The controls automatically resize and rearrange for different screen sizes and o
 - **Swipe down** → soft drop
 - **Swipe up** → hard drop
 
+## 🕹️ Game Modes
+
+Choose a mode before starting:
+
+- **Marathon** — classic endless play with level progression.
+- **Sprint 40** — finish by clearing 40 lines.
+- **Ultra 120** — score as much as possible in two minutes.
+- **Zen** — relaxed play without automatic piece falling; use soft drop when ready.
+
+The in-game HUD shows combo, elapsed/remaining time, and pieces locked. Mode selection is locked while a round is active.
+
 ## ✨ Game Features
 
 - Classic **10 × 20 Tetris** board
@@ -61,6 +72,11 @@ The controls automatically resize and rearrange for different screen sizes and o
 - TETRIS detection for four-line clears
 - Perfect Clear detection
 - Perfect Clear bonus scoring
+- Combo scoring for consecutive line-clearing locks
+- Back-to-back Tetris bonus
+- Hard-drop distance points
+- Sprint and timed challenge modes
+- Persistent session statistics (games, lines, Tetrises, perfect clears, best combo)
 - Level progression
 - Increasing fall speed
 - High-score persistence using local storage
@@ -102,7 +118,7 @@ If clearing lines leaves the entire board empty:
 
 A four-line clear is also displayed as **TETRIS!**.
 
-Movement, rotation, holding and ordinary falling do not independently add score.
+Movement, rotation, holding and ordinary falling do not independently add score. Hard drops award 2 points per cell travelled. Consecutive line clears add a combo bonus; consecutive Tetrises add a back-to-back bonus.
 
 ## 📈 Levels
 
