@@ -2,6 +2,13 @@
 
 A fast, responsive, offline-ready Tetris game built with **HTML, CSS and vanilla JavaScript**. No external libraries are required.
 
+## 🔧 Latest Stability Upgrade
+
+- Added a short grounded lock delay so pieces do not instantly lock the first frame they touch a stack; players can make last-second adjustments.
+- High-score persistence now also accounts for hard-drop points immediately.
+- Updated the service worker to use network-first refresh with cached offline fallback, reducing the chance that a previously cached build hides a newly deployed update.
+- Bumped the offline cache version so clients refresh the app shell and matching VOIDBLOCK icons.
+
 ## 🎮 Controls
 
 ### Laptop / PC / Desktop
