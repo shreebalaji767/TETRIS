@@ -30,7 +30,7 @@ button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 .kicker{font-size:9px;color:var(--muted);letter-spacing:2px;text-align:center;margin:4px 0 7px}
 .status-pill{display:inline-flex;align-items:center;justify-content:center;min-height:22px;padding:3px 10px;border:1px solid #294057;border-radius:999px;background:#0a111be6;color:#9eb0c5;font-size:9px;letter-spacing:1px}
 .side{display:flex;flex-direction:column;gap:12px}.mode-picker{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 10px}.mode-picker label{font-size:9px;letter-spacing:1.4px;color:var(--muted);font-weight:900}.mode-picker select{min-width:0;max-width:160px;padding:8px 10px;border:1px solid var(--line2);border-radius:10px;background:#101a29;color:var(--text);font:800 11px system-ui;outline-color:var(--cyan)}.mode-hint{font-size:9px;color:var(--muted);text-align:center;margin:-4px 0 8px}.mini-note b{color:var(--cyan);font-weight:900}.stats-strip{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;font-size:9px;letter-spacing:1px;color:var(--muted);margin:5px 0}.stats-strip b{color:var(--cyan)}
-.brand{text-align:center;font-size:clamp(21px,2.4vw,29px);font-weight:950;letter-spacing:5px;text-shadow:0 0 28px #67e8f922}
+.brand{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;font-size:clamp(21px,2.4vw,29px);font-weight:950;letter-spacing:4px;text-shadow:0 0 28px #67e8f944}.brand-mark{width:38px;height:38px;flex:none;filter:drop-shadow(0 0 10px #67e8f944)}.brand-word{line-height:1}.brand-word span{display:block;font-size:8px;letter-spacing:3.8px;color:#7f91a9;margin-top:5px;font-weight:800}
 .panel{background:linear-gradient(145deg,#142033e8,#0a111bdd);border:1px solid var(--line);border-radius:17px;padding:13px;box-shadow:0 15px 38px #0008,inset 0 1px #ffffff0a;backdrop-filter:blur(12px)}
 .label{font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:5px}.value{font-size:clamp(22px,2.3vw,28px);font-weight:950}
 .preview{width:100%;height:86px;display:block}
@@ -101,7 +101,7 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 <body>
 <div id="app"><main class="shell">
 <section class="side left">
-<div class="brand">VOIDBLOCK</div>
+<div class="brand" aria-label="VOIDBLOCK Tetris"><img class="brand-mark" src="./icon.svg" alt="" width="38" height="38"><div class="brand-word">VOIDBLOCK<span>NEON BLOCK SYSTEM</span></div></div>
 <div class="panel"><div class="label">HOLD</div><canvas id="hold" class="preview" width="160" height="86"></canvas></div>
 <div class="panel"><div class="label">SCORE</div><div id="score" class="value">0</div></div>
 <div class="panel"><div class="label">LINES</div><div id="lines" class="value">0</div></div>
