@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#070a10"/><g fill="#fff"><rect x="80" y="80" width="104" height="104" rx="12"/><rect x="204" y="80" width="104" height="104" rx="12"/><rect x="328" y="80" width="104" height="104" rx="12"/><rect x="204" y="204" width="104" height="104" rx="12"/><rect x="328" y="204" width="104" height="104" rx="12"/><rect x="328" y="328" width="104" height="104" rx="12"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<title>VOIDBLOCK</title>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#67e8f9"/><stop offset=".52" stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<rect width="512" height="512" rx="100" fill="#070b12"/><rect x="8" y="8" width="496" height="496" rx="92" fill="none" stroke="#263b52" stroke-width="8"/>
+<g fill="url(#g)" filter="url(#glow)"><rect x="80" y="80" width="104" height="104" rx="20"/><rect x="204" y="80" width="104" height="104" rx="20"/><rect x="328" y="80" width="104" height="104" rx="20"/><rect x="204" y="204" width="104" height="104" rx="20"/><rect x="204" y="328" width="104" height="104" rx="20"/></g>
+<path d="M80 240h70M362 380h70" stroke="#86efac" stroke-width="12" stroke-linecap="round"/>
+</svg>
