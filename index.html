@@ -427,7 +427,7 @@ landingPlay.addEventListener("click",()=>{startAfterRoute=true;location.hash="pl
 window.addEventListener("hashchange",()=>{if(location.hash==="#play"){if(app.classList.contains("app-hidden")){showGameScreen(startAfterRoute);startAfterRoute=false}}else{startAfterRoute=false;showLandingScreen()}});
 if(location.hash==="#play"){showGameScreen(false)}else{showLandingScreen()}
 
-resetState();fitCanvas();showMain();updateUI();setState("READY");
+resetState();fitCanvas();showMain();updateUI();setState("READY");renderModeBests();
 requestAnimationFrame(gamepadLoop);
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
