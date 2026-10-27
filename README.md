@@ -258,6 +258,23 @@ Recent updates have focused heavily on controls and stability:
 - `icon.svg` — application icon
 - `favicon.svg` — browser favicon
 
+## 🎮 Four-Phase Upgrade
+
+### Phase 1 — Gameplay polish
+- Ghost piece and hold-piece support, SRS-style wall kicks, 180° rotation, T-spin mini/full scoring, combo and back-to-back bonuses, hard-drop points, and perfect-clear bonuses.
+
+### Phase 2 — Visual and audio
+- Neon board glow, animated line-clear particles, responsive menus, three block palettes (Neon, Cyber, Monochrome), sound effects, and an optional procedural ambient soundtrack.
+- Respects the operating system's reduced-motion preference.
+
+### Phase 3 — Progression and challenges
+- Marathon, Sprint 40, Ultra 120, Zen, and daily 20-line challenge.
+- Six achievements, lifetime rank progression, average completed-run score, total playtime, and career statistics stored locally.
+
+### Phase 4 — Quality and reliability
+- Touch controls, keyboard support, Gamepad API support, safe-area-aware mobile layout, browser-focus auto-pause, and offline app-shell caching.
+- GitHub Actions checks JavaScript syntax, unique HTML IDs, key gameplay/navigation feature hooks, manifest configuration, and offline assets on pushes and pull requests.
+
 ## 🚀 Run Locally
 
 Because the game is a static web application, it can be served from any static web server.
