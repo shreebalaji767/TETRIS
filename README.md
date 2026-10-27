@@ -2,6 +2,10 @@
 
 A fast, responsive, offline-ready Tetris game built with **HTML, CSS and vanilla JavaScript**. No external libraries are required.
 
+## 🏁 Landing Page
+
+VOIDBLOCK now opens on a responsive landing page with the neon brand mark, game-mode selection, feature highlights, and a Play Now button. Selecting a mode and starting a game transitions into the existing game screen. The service-worker cache is bumped so deployed clients can receive this update.
+
 ## 🔧 Latest Stability Upgrade
 
 - Added a short grounded lock delay so pieces do not instantly lock the first frame they touch a stack; players can make last-second adjustments.
