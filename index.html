@@ -96,6 +96,7 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
  .topbar{position:absolute;left:5px;top:5px;z-index:8}.controls{position:absolute;right:4px;bottom:4px;width:180px;grid-template-columns:repeat(2,1fr);margin:0;gap:5px}.controls .drop{grid-column:span 2}.controls button{min-height:38px;font-size:14px}.controls .move{min-height:44px;font-size:19px}.hint{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.brand-home{text-decoration:none;color:inherit;border:0;background:none;padding:0;box-shadow:none;cursor:pointer}.brand-home:hover{transform:none;filter:brightness(1.12)}.landing-logo-link{text-decoration:none;color:inherit;cursor:pointer}
 /* Landing page */
 #app.app-hidden{display:none}
 .landing{position:fixed;inset:0;z-index:100;overflow-y:auto;overflow-x:hidden;background:radial-gradient(ellipse at 50% 0%,#162844 0%,#080d17 43%,#03050a 100%);padding:max(20px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}
@@ -145,7 +146,7 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 <section id="landing" class="landing" aria-label="VOIDBLOCK game landing page">
   <div class="landing-inner">
     <header class="landing-nav">
-      <div class="landing-logo"><img src="./icon.svg" alt=""><div>VOIDBLOCK<small>NEON BLOCK SYSTEM</small></div></div>
+      <a class="landing-logo landing-logo-link" href="./" aria-label="VOIDBLOCK home"><img src="./icon.svg" alt=""><div>VOIDBLOCK<small>NEON BLOCK SYSTEM</small></div></a>
       <div class="landing-nav-tag">FREE TO PLAY · WORKS OFFLINE</div>
     </header>
     <main class="landing-hero">
@@ -182,7 +183,7 @@ canvas#game{display:block;width:100%;height:100%;background:#060a11;border:2px s
 </section>
 <div id="app" class="app-hidden"><main class="shell">
 <section class="side left">
-<div class="brand" aria-label="VOIDBLOCK Tetris"><img class="brand-mark" src="./icon.svg" alt="" width="38" height="38"><div class="brand-word">VOIDBLOCK<span>NEON BLOCK SYSTEM</span></div></div>
+<a class="brand brand-home" href="./" aria-label="Return to VOIDBLOCK landing page"><img class="brand-mark" src="./icon.svg" alt="" width="38" height="38"><div class="brand-word">VOIDBLOCK<span>NEON BLOCK SYSTEM · HOME</span></div></a>
 <div class="panel"><div class="label">HOLD</div><canvas id="hold" class="preview" width="160" height="86"></canvas></div>
 <div class="panel"><div class="label">SCORE</div><div id="score" class="value">0</div></div>
 <div class="panel"><div class="label">LINES</div><div id="lines" class="value">0</div></div>
@@ -360,7 +361,12 @@ const landingBlocks=[
  [0,10,"cyan"],[1,10,"cyan"],[2,10,"cyan"],[3,10,"cyan"]
 ];
 for(let i=0;i<120;i++){const cellEl=document.createElement("span");cellEl.className="landing-cell";const x=i%10,y=Math.floor(i/10);const match=landingBlocks.find(([bx,by])=>bx===x&&by===y);if(match)cellEl.classList.add(match[2]);landingBoard.appendChild(cellEl)}
-landingPlay.addEventListener("click",()=>{modeSelect.value=landingMode.value;mode=landingMode.value;landing.classList.add("landing-hidden");app.classList.remove("app-hidden");fitCanvas();start();window.scrollTo(0,0)});
+let startAfterRoute=false;
+function showGameScreen(autoStart=false){landing.classList.add("landing-hidden");app.classList.remove("app-hidden");fitCanvas();if(autoStart){modeSelect.value=landingMode.value;mode=landingMode.value;start()}else{showMain();updateUI();setState("READY")}window.scrollTo(0,0)}
+function showLandingScreen(){if(running||paused)exitGame();landing.classList.remove("landing-hidden");app.classList.add("app-hidden");}
+landingPlay.addEventListener("click",()=>{startAfterRoute=true;location.hash="play";if(location.hash==="#play"&&app.classList.contains("app-hidden")){showGameScreen(startAfterRoute);startAfterRoute=false}});
+window.addEventListener("hashchange",()=>{if(location.hash==="#play"){showGameScreen(startAfterRoute);startAfterRoute=false}else{startAfterRoute=false;showLandingScreen()}});
+if(location.hash==="#play"){showGameScreen(false)}else{showLandingScreen()}
 
 resetState();fitCanvas();showMain();updateUI();setState("READY");
 if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
