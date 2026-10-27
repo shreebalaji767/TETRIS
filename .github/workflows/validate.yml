@@ -21,6 +21,28 @@ jobs:
         run: |
           node -e 'const fs=require("node:fs"); const html=fs.readFileSync("index.html","utf8"); const match=html.match(/<script>([\s\S]*?)<\/script>/); if(!match) throw new Error("Inline game script not found"); fs.writeFileSync("/tmp/voidblock.js",match[1]);'
           node --check /tmp/voidblock.js
+      - name: Smoke-test gameplay, accessibility, and navigation hooks
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const assert = require("node:assert/strict");
+          const html = fs.readFileSync("index.html", "utf8");
+          const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
+          assert.equal(new Set(ids).size, ids.length, "HTML element IDs must be unique");
+          for (const id of ["game", "ghostToggle", "musicToggle", "controllerStatus", "themeSelect", "achievementList", "statRank", "statAverage", "statPlayTime"]) {
+            assert.ok(ids.includes(id), "Missing expected feature element: " + id);
+          }
+          for (const feature of ["function tryRotate", "function isTSpin", "function hardDrop", "function hold", "function startMusic", "function pollGamepad", "function rankForLines", "function recordRun", "prefers-reduced-motion", 'href="./icon.svg"']) {
+            assert.ok(html.includes(feature), "Missing expected feature hook: " + feature);
+          }
+          assert.ok(html.includes('if(location.hash==="#play"){showGameScreen(false)}else{showLandingScreen()}'), "Root URL must open the landing page");
+          const manifest = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
+          assert.ok(manifest.icons.some(icon => icon.src === "icon.svg"), "App icon must be configured");
+          const sw = fs.readFileSync("sw.js", "utf8");
+          assert.match(sw, /const CACHE_NAME = "voidblock-v\d+"/, "Offline cache must be versioned");
+          assert.ok(sw.includes('"./index.html"'), "Offline app shell must cache index.html");
+          console.log("VOIDBLOCK feature smoke tests passed");
+          NODE
       - name: Validate web app manifest
         run: node -e 'JSON.parse(require("node:fs").readFileSync("manifest.json","utf8")); console.log("manifest.json is valid")'
       - name: Verify offline shell assets exist
