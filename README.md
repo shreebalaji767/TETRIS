@@ -61,6 +61,7 @@ The controls automatically resize and rearrange for different screen sizes and o
 Choose a mode before starting:
 
 - **Marathon** — classic endless play with level progression.
+- **Sprint 10** — quick challenge: finish by clearing 10 lines.
 - **Sprint 40** — finish by clearing 40 lines.
 - **Ultra 120** — score as much as possible in two minutes.
 - **Zen** — relaxed play without automatic piece falling; use soft drop when ready.
@@ -74,7 +75,7 @@ The in-game HUD shows combo, elapsed/remaining time, and pieces locked. Mode sel
 
 - Added a daily 20-line challenge with a date-seeded seven-piece bag sequence, so everyone receives the same daily piece order.
 - Added six locally saved achievements for starting play, reaching 10,000 points, clearing 10 lines, making a Tetris, achieving a perfect clear, and completing a daily challenge.
-- Added Neon, Cyber, and Monochrome tetromino palettes in Settings; the selected palette is saved on the device.
+- Added Neon, Cyber, Monochrome, and High Contrast tetromino palettes in Settings; the selected palette is saved on the device.
 - Added the daily challenge to both the landing-page and in-game mode selectors.
 
 
@@ -264,11 +265,11 @@ Recent updates have focused heavily on controls and stability:
 - Ghost piece and hold-piece support, SRS-style wall kicks, 180° rotation, T-spin mini/full scoring, combo and back-to-back bonuses, hard-drop points, and perfect-clear bonuses.
 
 ### Phase 2 — Visual and audio
-- Neon board glow, animated line-clear particles, responsive menus, three block palettes (Neon, Cyber, Monochrome), sound effects, and an optional procedural ambient soundtrack.
+- Neon board glow, animated line-clear particles, responsive menus, four block palettes (Neon, Cyber, Monochrome, High Contrast), sound effects, and an optional procedural ambient soundtrack.
 - Respects the operating system's reduced-motion preference.
 
 ### Phase 3 — Progression and challenges
-- Marathon, Sprint 40, Ultra 120, Zen, and daily 20-line challenge.
+- Marathon, Sprint 10, Sprint 40, Ultra 120, Zen, and daily 20-line challenge.
 - Six achievements, lifetime rank progression, average completed-run score, total playtime, and career statistics stored locally.
 
 ### Phase 4 — Quality and reliability
@@ -337,3 +338,10 @@ Earlier upgrades added:
 
 **VOIDBLOCK**  
 *Classic blocks. Modern controls. No excuses. 🧱*
+
+
+## Accessibility & Quick-Play Update
+
+- **Sprint 10** is a short 10-line completion challenge, alongside Sprint 40.
+- **High Contrast** palette uses brighter, more separated piece colors and stronger focus outlines for keyboard navigation.
+- Existing reduced-motion support, touch/gamepad/keyboard controls, offline play and local-only records remain enabled.
