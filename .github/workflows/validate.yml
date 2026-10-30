@@ -29,13 +29,15 @@ jobs:
           const html = fs.readFileSync("index.html", "utf8");
           const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
           assert.equal(new Set(ids).size, ids.length, "HTML element IDs must be unique");
-          for (const id of ["game", "ghostToggle", "musicToggle", "controllerStatus", "themeSelect", "achievementList", "statRank", "statAverage", "statPlayTime"]) {
+          for (const id of ["game", "ghostToggle", "musicToggle", "controllerStatus", "themeSelect", "achievementList", "statRank", "statAverage", "statPlayTime", "landingMode", "modeSelect"]) {
             assert.ok(ids.includes(id), "Missing expected feature element: " + id);
           }
-          for (const feature of ["function tryRotate", "function isTSpin", "function hardDrop", "function hold", "function startMusic", "function pollGamepad", "function rankForLines", "function recordRun", "prefers-reduced-motion", 'href="./icon.svg"']) {
+          for (const feature of ["function tryRotate", "function isTSpin", "function hardDrop", "mode===\"sprint10\"&&lines>=10", "value=\"contrast\"", "function hold", "function startMusic", "function pollGamepad", "function rankForLines", "function recordRun", "prefers-reduced-motion", 'href="./icon.svg"']) {
             assert.ok(html.includes(feature), "Missing expected feature hook: " + feature);
           }
           assert.ok(html.includes('if(location.hash==="#play"){showGameScreen(false)}else{showLandingScreen()}'), "Root URL must open the landing page");
+          assert.ok(html.includes('value="sprint10"'), "Sprint 10 mode must be selectable");
+          assert.ok(html.includes('value="contrast"'), "High contrast palette must be selectable");
           const manifest = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
           assert.ok(manifest.icons.some(icon => icon.src === "icon.svg"), "App icon must be configured");
           const sw = fs.readFileSync("sw.js", "utf8");
