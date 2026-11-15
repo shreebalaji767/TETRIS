@@ -345,3 +345,12 @@ Earlier upgrades added:
 - **Sprint 10** is a short 10-line completion challenge, alongside Sprint 40.
 - **High Contrast** palette uses brighter, more separated piece colors and stronger focus outlines for keyboard navigation.
 - Existing reduced-motion support, touch/gamepad/keyboard controls, offline play and local-only records remain enabled.
+
+
+## Responsive Layout Update
+
+- Kept the project as a static HTML/CSS/vanilla JavaScript site with no backend or external runtime dependencies.
+- Reworked compact-screen layout so the HOLD, SCORE, LINES, LEVEL, BEST, NEXT and career-stat panels remain in normal document flow instead of overlapping the playfield.
+- Added dedicated portrait phone/tablet and landscape layouts, including compact controls and safe-area spacing.
+- Preserved existing gameplay modes, scoring, achievements, themes, sound, settings, keyboard, touch, swipe, gamepad, local records and PWA/offline behavior.
+- Bumped the service-worker cache to voidblock-v34 so installed/offline clients can receive the updated app shell.
