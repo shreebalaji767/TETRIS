@@ -495,6 +495,68 @@ html[data-theme="contrast"] button:focus-visible,html[data-theme="contrast"] sel
  .hint{display:none}
 }
 
+
+/* Universal compact-screen layout: keep every HUD panel and control in-flow. */
+@media(max-width:800px){
+  html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+  body{display:block}
+  #app{height:auto;min-height:100dvh;align-items:flex-start;justify-content:center;padding:max(5px,env(safe-area-inset-top)) max(5px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left))}
+  .shell{width:min(100%,560px);height:auto;min-height:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-flow:row;gap:5px;align-items:stretch;justify-content:stretch}
+  .side{display:contents}
+  .brand{position:static;grid-column:1/-1;transform:none;justify-self:center;order:0;margin:2px 0 4px}
+  .left .panel,.right .panel{position:static;inset:auto;width:auto;min-width:0;max-width:none;display:block;grid-column:span 1;grid-row:auto;z-index:auto;padding:6px 5px;border-radius:10px;background:linear-gradient(145deg,#142033e8,#0a111bdd)}
+  .label,.panel-title{font-size:7px;letter-spacing:1px;margin-bottom:3px}
+  .value{font-size:clamp(12px,3.4vw,17px)}
+  .preview{height:38px}
+  .next-list{gap:1px}.next-item{height:22px;padding-top:1px}
+  .mini-note{font-size:7px;line-height:1.35;margin-top:3px;letter-spacing:0}
+  .center{grid-column:1/-1;grid-row:4;grid-row-start:4;min-width:0;width:100%;display:flex;flex-direction:column;align-items:stretch;gap:3px}
+  .kicker{margin:0 0 2px}
+  .topbar{position:static;order:0;justify-content:center;flex-wrap:wrap;margin:0 0 3px}
+  .topbar button{min-height:34px;padding:0 10px;font-size:10px}
+  .board-frame{padding:4px;border-radius:15px}
+  .board-wrap{width:min(88vw,calc((100dvh - 330px)/2),360px);max-height:none;aspect-ratio:10/20;margin:0 auto;flex:none}
+  canvas#game{border-radius:12px}
+  .controls{position:relative;inset:auto;width:min(100%,430px);margin:5px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:6px;border-radius:13px}
+  .controls button{min-width:0;min-height:clamp(38px,6dvh,50px);font-size:clamp(15px,4vw,20px);border-radius:10px}
+  .controls .move{grid-column:span 1;min-height:clamp(42px,6.5dvh,54px);font-size:clamp(20px,6vw,26px)}
+  .controls .wide,.controls .drop{grid-column:span 2}
+  .controls .drop{min-height:42px}
+  .control-label{font-size:7px}
+  .status{margin:2px 0 0;min-height:15px}
+  .hint{margin:2px 0 0}
+  .key-help{display:none}
+}
+@media(max-width:420px){
+  .shell{gap:4px}
+  .left .panel,.right .panel{padding:5px 4px}
+  .value{font-size:12px}
+  .next-item{height:18px}
+  .board-wrap{width:min(88vw,calc((100dvh - 315px)/2),330px)}
+  .controls{gap:4px;padding:5px}
+  .controls button{min-height:37px}
+  .controls .move{min-height:41px}
+}
+@media(max-width:800px) and (orientation:landscape){
+  #app{padding:4px}
+  .shell{width:100%;max-width:100%;grid-template-columns:minmax(90px,1fr) minmax(0,2fr) minmax(90px,1fr);grid-template-rows:auto minmax(0,1fr);gap:5px;align-items:center}
+  .brand{grid-column:1/-1;grid-row:1}
+  .left,.right{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .left{grid-column:1;grid-row:2}
+  .right{grid-column:3;grid-row:2}
+  .left .panel,.right .panel{padding:4px;flex:1}
+  .center{grid-column:2;grid-row:2;min-height:0;justify-content:center}
+  .board-wrap{width:min(38dvh,calc((100vw - 210px)/2),190px);margin:0 auto}
+  .controls{width:100%;max-width:260px;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:3px;margin-top:4px}
+  .controls button{min-height:29px;font-size:13px}
+  .controls .move{min-height:32px;font-size:17px}
+  .controls .drop{min-height:29px}
+  .status,.hint{font-size:7px;min-height:0;margin:1px 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .board-frame{animation:none}
+}
+
 </style>
 </head>
 <body>
